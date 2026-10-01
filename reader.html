@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading Neon Rebel - Chapter 1 | ComicVault</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="reader-body">
+
+  <!-- Shared Header & Navigation Bar -->
+  <header class="header">
+    <div class="logo">ComicVault</div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="browse.html">Browse</a>
+      <a href="upload.html">Upload</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <main class="reader-container">
+    
+    <!-- Reader Top Toolbar (Controls & Mode Switching) -->
+    <section class="reader-toolbar">
+      <div class="comic-title-info">
+        <a href="browse.html" class="back-link">&larr; Back to Comic</a>
+        <h1 id="comic-title">Neon Rebel</h1>
+        <span class="chapter-subtitle" id="chapter-title">Chapter 1: Cyber City</span>
+      </div>
+
+      <div class="toolbar-controls">
+        <!-- Chapter Selector -->
+        <!-- JS PLACEHOLDER: JS will populate this dropdown with all available chapters -->
+        <select id="chapter-select" class="select-field">
+          <option value="1" selected>Chapter 1: Cyber City</option>
+          <option value="2">Chapter 2: The Neon Alley</option>
+          <option value="3">Chapter 3: System Override</option>
+        </select>
+
+        <!-- Reading Mode -->
+        <!-- JS PLACEHOLDER: Changing this dropdown will dynamically toggle CSS classes on #reader-display -->
+        <div class="mode-indicator">
+          <span id="creator-intent-badge" class="badge">Loading Mode...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hotkey / Guidance Tip -->
+    <div class="reader-tip">
+      <small>Tip: Use <strong>Left / Right Arrow keys</strong> to turn pages in single-page mode.</small>
+    </div>
+
+    <!-- MAIN COMIC DISPLAY AREA -->
+    <!-- JS PLACEHOLDER: Phase 2 JS will manipulate this section to display images based on selected mode -->
+    <div id="reader-display" class="reader-display mode-infinite">
+
+      <!-- ============================================================ -->
+      <!-- OPTION A: INFINITE SCROLL MODE (Webtoon Style)               -->
+      <!-- Images stack vertically with zero margins between them.      -->
+      <!-- ============================================================ -->
+      <div id="infinite-wrapper" class="infinite-wrapper">
+        <img src="https://via.placeholder.com/800x1200/1e293b/ffffff?text=Page+1+(Infinite+Scroll)" alt="Page 1" class="webtoon-page">
+        <img src="https://via.placeholder.com/800x1200/334155/ffffff?text=Page+2+(Infinite+Scroll)" alt="Page 2" class="webtoon-page">
+        <img src="https://via.placeholder.com/800x1200/475569/ffffff?text=Page+3+(Infinite+Scroll)" alt="Page 3" class="webtoon-page">
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- OPTION B: SINGLE PAGE MODE (LTR / RTL Manga Style)           -->
+      <!-- Hidden by default until JS or mode selector switches to it.   -->
+      <!-- ============================================================ -->
+      <div id="single-page-wrapper" class="single-page-wrapper" style="display: none;">
+        
+        <!-- Left Touch/Click Zone to turn page -->
+        <button id="prev-page-btn" class="page-nav-overlay prev-overlay" title="Previous Page">&lsaquo;</button>
+        
+        <!-- Currently Active Comic Page -->
+        <img id="active-page-img" src="https://via.placeholder.com/800x1200/1e293b/ffffff?text=Single+Page+View+(Page+1)" alt="Comic Page" class="single-page">
+        
+        <!-- Right Touch/Click Zone to turn page -->
+        <button id="next-page-btn" class="page-nav-overlay next-overlay" title="Next Page">&rsaquo;</button>
+      </div>
+
+    </div>
+
+    <!-- Page Counter (Visible in Single-Page Mode) -->
+    <div id="page-counter" class="page-counter" style="display: none;">
+      Page <span id="current-page-num">1</span> of <span id="total-pages-num">3</span>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <section class="reader-bottom-nav">
+      <button id="prev-chapter-btn" class="btn btn-secondary" disabled>&laquo; Previous Chapter</button>
+      <button id="scroll-top-btn" class="btn btn-secondary" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">Top &uarr;</button>
+      <button id="next-chapter-btn" class="btn btn-primary">Next Chapter &raquo;</button>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 ComicVault. Built for webcomic creators and readers.</p>
+  </footer>
+
+  <!-- JS PLACEHOLDER: Un-comment when you create reader.js in Phase 2 -->
+  <script src="reader.js"></script>
+</body>
+</html>

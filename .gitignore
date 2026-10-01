@@ -1,0 +1,11 @@
+# Ignore sensitive credential files
+.env
+.env.local
+*.env
+
+# Ignore system junk files
+.DS_Store
+Thumbs.db
+
+# Ignore dependencies (if using Node later)
+node_modules/

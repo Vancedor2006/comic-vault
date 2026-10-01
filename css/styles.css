@@ -1,0 +1,536 @@
+
+        /* 
+           1. CSS VARIABLES & BASE RESET
+           Variables allow you to change sitewide colors in one place.
+        */
+        :root {
+            --bg-color: #121214;       /* Main background */
+            --surface-color: #1c1c1f;  /* Cards, header, footer background */
+            --text-main: #f0f0f2;      /* Primary text */
+            --text-muted: #a0a0a8;     /* Secondary/Subdued text */
+            --border-color: #2e2e33;   /* Structural dividers & borders */
+            --accent-color: #3b82f6;   /* Link/Button highlights */
+        }
+
+        /* Standard box sizing reset so padding doesn't affect total element width */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        /* Container helper to center page content and cap maximum width */
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* 
+           2. HEADER & NAVIGATION (FLEXBOX)
+        */
+        .site-header {
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+        }
+
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* 
+           3. HERO FEATURED AREA
+        */
+        .hero {
+            padding: 2.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .hero-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .hero-title {
+            font-size: 1.75rem;
+        }
+
+        .hero-description {
+            color: var(--text-muted);
+            max-width: 700px;
+        }
+
+        .btn {
+            display: inline-block;
+            align-self: flex-start;
+            background-color: var(--accent-color);
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* 
+           4. COMIC GRID (CSS GRID)
+           Using repeat(auto-fill, minmax(...)) dynamically calculates columns 
+           without hardcoded breakpoints.
+        */
+        .section-heading {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .comic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 3rem;
+        }
+
+        .comic-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .comic-cover {
+            width: 100%;
+            aspect-ratio: 2 / 3; /* Standard cover aspect ratio */
+            object-fit: cover;
+            background-color: #2a2a2e; /* Placeholder background color while loading */
+        }
+
+        .comic-meta {
+            padding: 0.75rem;
+        }
+
+        .comic-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Truncates long text with '...' */
+        }
+
+        .comic-chapter {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* 
+           5. FOOTER
+        */
+        .site-footer {
+            background-color: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            padding: 1.5rem 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+    /* Filter Bar Styles */
+.filter-section {
+  margin-bottom: 2rem;
+}
+
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 180px;
+}
+
+.input-field, .select-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-secondary, #1e293b);
+  border: 1px solid #334155;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.input-field:focus, .select-field:focus {
+  outline: 2px solid var(--accent-color, #f97316);
+}
+
+/* Comic Card Badges & Tags */
+.cover-container {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.badge-infinite { background-color: #8b5cf6; } /* Purple */
+.badge-rtl { background-color: #ef4444; }      /* Red */
+.badge-ltr { background-color: #3b82f6; }      /* Blue */
+
+.tags {
+  display: flex;
+  gap: 0.4rem;
+  margin: 0.5rem 0;
+}
+
+.tag {
+  font-size: 0.75rem;
+  background-color: #334155;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #cbd5e1;
+}
+
+.chapter-count {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 3rem;
+}
+
+.pagination button {
+  padding: 0.5rem 1rem;
+  background-color: var(--bg-secondary, #1e293b);
+  border: 1px solid #334155;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: var(--accent-color, #f97316);
+  border-color: var(--accent-color, #f97316);
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* ==========================================================================
+   Auth / Login Page Styles
+   ========================================================================== */
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(80vh - 120px);
+  padding: 2rem 1rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--bg-secondary, #1e293b);
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Auth Tabs Header */
+.auth-tabs {
+  display: flex;
+  border-bottom: 2px solid #334155;
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.75rem;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.tab-btn.active {
+  color: var(--accent-color, #f97316);
+  border-bottom: 3px solid var(--accent-color, #f97316);
+  margin-bottom: -2px;
+}
+
+/* Auth Form Typography */
+.auth-form h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.auth-subtitle {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin-bottom: 1.5rem;
+}
+
+/* Helper Utility Classes */
+.hidden {
+  display: none !important;
+}
+
+.form-row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.forgot-link {
+  color: var(--accent-color, #f97316);
+  text-decoration: none;
+}
+
+.btn-full {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+/* ==========================================================================
+   Reader Page Styles
+   ========================================================================== */
+
+/* Dark focus background specifically for reading */
+.reader-body {
+  background-color: #090d16;
+}
+
+.reader-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Reader Navigation Toolbar */
+.reader-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  background-color: var(--bg-secondary, #1e293b);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.comic-title-info h1 {
+  font-size: 1.4rem;
+  margin: 0.2rem 0;
+}
+
+.back-link {
+  color: var(--accent-color, #f97316);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.chapter-subtitle {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.toolbar-controls {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+}
+
+.reader-tip {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 1.5rem;
+}
+
+/* Main Display Container */
+.reader-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 600px;
+  background-color: #000;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* --- Mode 1: Infinite Scroll (Webtoon) --- */
+.infinite-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 800px;
+}
+
+.webtoon-page {
+  width: 100%;
+  height: auto;
+  display: block; /* Removes image gaps */
+}
+
+/* --- Mode 2: Single Page (LTR / RTL) --- */
+.single-page-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.single-page {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+}
+
+/* Navigation Click Zones over Page */
+.page-nav-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 15%;
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  border: none;
+  font-size: 3rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.single-page-wrapper:hover .page-nav-overlay {
+  opacity: 0.7;
+}
+
+.page-nav-overlay:hover {
+  opacity: 1 !important;
+  background: rgba(249, 115, 22, 0.4); /* Accent glow on hover */
+}
+
+.prev-overlay { left: 0; }
+.next-overlay { right: 0; }
+
+.page-counter {
+  text-align: center;
+  margin: 1rem 0;
+  font-weight: bold;
+  color: #cbd5e1;
+}
+
+/* Bottom Nav Buttons */
+.reader-bottom-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+}
+
+.btn {
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--accent-color, #f97316);
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: var(--bg-secondary, #1e293b);
+  color: #fff;
+  border: 1px solid #334155;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

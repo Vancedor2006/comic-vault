@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Comic - ComicVault</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Shared Header & Navigation Bar -->
+  <header class="header">
+    <div class="logo">ComicVault</div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="browse.html">Browse</a>
+      <a href="upload.html" class="active">Upload</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    
+    <section class="upload-header">
+      <h1>Publish a Comic</h1>
+      <p>Upload your series details, cover art, and chapter pages.</p>
+    </section>
+
+    <!-- Upload Form -->
+    <!-- JS PLACEHOLDER: Phase 2 JS will intercept submit, preview images, and send files to Supabase in Phase 3 -->
+    <form id="upload-form" class="upload-form" onsubmit="event.preventDefault();">
+
+      <!-- SECTION 1: Series Metadata -->
+      <fieldset class="form-section">
+        <legend>1. Series Details</legend>
+
+        <div class="form-group">
+          <label for="series-title">Comic Title *</label>
+          <input type="text" id="series-title" class="input-field" placeholder="e.g., Solar Knight" required>
+        </div>
+
+        <div class="form-group">
+          <label for="series-synopsis">Synopsis / Description</label>
+          <textarea id="series-synopsis" class="input-field textarea-field" rows="4" placeholder="Brief summary of your comic story..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="series-genre">Primary Genre *</label>
+            <select id="series-genre" class="select-field" required>
+              <option value="" disabled selected>Select genre</option>
+              <option value="action">Action</option>
+              <option value="fantasy">Fantasy</option>
+              <option value="romance">Romance</option>
+              <option value="scifi">Sci-Fi</option>
+              <option value="slice-of-life">Slice of Life</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="reading-mode">Default Reading Direction *</label>
+            <select id="reading-mode" class="select-field" required>
+              <option value="infinite" selected>Infinite Scroll (Webtoon / Vertical)</option>
+              <option value="ltr">Left to Right (Western)</option>
+              <option value="rtl">Right to Left (Manga)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Cover Image Upload Box -->
+        <div class="form-group">
+          <label for="cover-file">Cover Image (JPG/PNG) *</label>
+          <div class="file-dropzone" id="cover-dropzone">
+            <input type="file" id="cover-file" accept="image/*" class="file-input" required>
+            <div class="dropzone-text">
+              <span class="upload-icon">&#128193;</span>
+              <p>Click or drag cover image here</p>
+              <small>Recommended ratio: 3:4 (e.g., 600x800px)</small>
+            </div>
+          </div>
+          <!-- JS PLACEHOLDER: Image preview thumbnail will render inside here -->
+          <div id="cover-preview" class="file-preview-container"></div>
+        </div>
+      </fieldset>
+
+      <!-- SECTION 2: Chapter Details & Image Uploads -->
+      <fieldset class="form-section">
+        <legend>2. First Chapter Upload</legend>
+
+        <div class="form-row">
+          <div class="form-group short-input">
+            <label for="chapter-number">Chapter # *</label>
+            <input type="number" id="chapter-number" class="input-field" value="1" min="1" required>
+          </div>
+
+          <div class="form-group">
+            <label for="chapter-title">Chapter Title (Optional)</label>
+            <input type="text" id="chapter-title" class="input-field" placeholder="e.g., The Beginning">
+          </div>
+        </div>
+
+        <!-- Multi-page Upload Box -->
+        <div class="form-group">
+          <label for="pages-files">Comic Pages (Select Multiple Images) *</label>
+          <div class="file-dropzone" id="pages-dropzone">
+            <input type="file" id="pages-files" accept="image/*" multiple class="file-input" required>
+            <div class="dropzone-text">
+              <span class="upload-icon">&#128444;</span>
+              <p>Click or drag all chapter page files here</p>
+              <small>Files will be read in alphabetical/numerical order (01.png, 02.png...)</small>
+            </div>
+          </div>
+          
+          <!-- JS PLACEHOLDER: List of selected files with re-order/delete buttons will render here in Phase 2 -->
+          <div id="pages-preview-list" class="file-list-preview">
+            <p class="empty-list-note">No page files selected yet.</p>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Form Submit Controls -->
+      <div class="form-actions">
+        <button type="reset" class="btn btn-secondary">Clear Form</button>
+        <button type="submit" id="submit-btn" class="btn btn-primary btn-large">Publish Comic & Chapter</button>
+      </div>
+
+    </form>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 ComicVault. Built for webcomic creators and readers.</p>
+  </footer>
+
+  <!-- JS PLACEHOLDER: Un-comment when you create upload.js in Phase 2 -->
+  <!-- <script src="upload.js"></script> -->
+</body>
+</html>
