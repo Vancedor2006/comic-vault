@@ -534,3 +534,6 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
+.hidden {
+  display: none !important;
+}

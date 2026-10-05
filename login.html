@@ -18,7 +18,8 @@
       <a href="index.html">Home</a>
       <a href="browse.html">Browse</a>
       <a href="upload.html">Upload</a>
-      <a href="login.html" class="active">Login</a>
+      <!-- Dynamic auth container populated by auth-nav.js -->
+      <div id="nav-user-container"></div>
     </nav>
   </header>
 
@@ -32,11 +33,10 @@
         <button id="tab-signup" class="tab-btn" onclick="switchTab('signup')">Sign Up</button>
       </div>
 
-      <!-- ============================================================ -->
-      <!-- FORM 1: LOG IN                                              -->
-      <!-- ============================================================ -->
-      <!-- JS PLACEHOLDER: Phase 2 JS will capture submit and Phase 3 will authenticate with Supabase -->
-      <form id="login-form" class="auth-form" onsubmit="event.preventDefault();">
+        <!-- ============================================================ -->
+       <!-- FORM 1: LOG IN                                               -->
+       <!-- ============================================================ -->
+      <form id="login-form" class="auth-form">
         <h2>Welcome Back</h2>
         <p class="auth-subtitle">Log in to manage your comics and save bookmarks.</p>
 
@@ -58,12 +58,15 @@
         </div>
 
         <button type="submit" id="login-btn" class="btn btn-primary btn-full">Log In</button>
+        <p id="login-message" class="auth-message"></p>
+      <p style="text-align: center; margin-top: 15px;">Don't have an account? <a href="#" id="show-signup">Sign up</a></p>
       </form>
+
 
       <!-- ============================================================ -->
       <!-- FORM 2: SIGN UP (Hidden by default)                         -->
       <!-- ============================================================ -->
-      <form id="signup-form" class="auth-form hidden" onsubmit="event.preventDefault();">
+      <form id="signup-form" class="auth-form hidden">
         <h2>Create an Account</h2>
         <p class="auth-subtitle">Join ComicVault to upload series and bookmark chapters.</p>
 
@@ -83,8 +86,9 @@
         </div>
 
         <button type="submit" id="signup-btn" class="btn btn-primary btn-full">Create Account</button>
+        <p id="signup-message" class="auth-message"></p>
+      <p style="text-align: center; margin-top: 15px;">Already have an account? <a href="#" id="show-login">Log in</a></p>
       </form>
-
     </div>
 
   </main>
@@ -115,7 +119,24 @@
     }
   </script>
 
-  <!-- JS PLACEHOLDER: Un-comment when you create login.js in Phase 2 -->
-  <!-- <script src="login.js"></script> -->
+<!-- 1. Load Supabase from the CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- 2. Initialize your database connection (must come BEFORE login.js) -->
+    <script src="supabase.js"></script>
+
+    <!-- 3. Load your Authentication logic -->
+    <script src="login.js"></script>
+<!-- 1. Load Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- 2. Initialize connection -->
+    <script src="supabase.js"></script>
+
+    <!-- 3. Global Navigation Logic -->
+    <script src="auth-nav.js"></script>
+
+    <!-- 4. Page-specific logic (e.g., login.js only goes on login.html) -->
+    <!-- <script src="page-specific.js"></script> -->
 </body>
 </html>

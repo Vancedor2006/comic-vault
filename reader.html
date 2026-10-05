@@ -18,7 +18,8 @@
       <a href="index.html">Home</a>
       <a href="browse.html">Browse</a>
       <a href="upload.html">Upload</a>
-      <a href="login.html">Login</a>
+      <!-- Dynamic auth container populated by auth-nav.js -->
+      <div id="nav-user-container"></div>
     </nav>
   </header>
 
@@ -106,5 +107,17 @@
 
 <!-- Reader Logic -->
   <script src="reader.js"></script>
+
+  <!-- 1. Load Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- 2. Initialize connection -->
+    <script src="supabase.js"></script>
+
+    <!-- 3. Global Navigation Logic -->
+    <script src="auth-nav.js"></script>
+
+    <!-- 4. Page-specific logic (e.g., login.js only goes on login.html) -->
+    <!-- <script src="page-specific.js"></script> -->
 </body>
 </html>
