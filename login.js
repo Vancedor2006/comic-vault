@@ -1,96 +1,117 @@
 /* ==========================================================================
-   Phase 2: Supabase Authentication Logic
+   ComicVault - Account pages (used by login.html AND signup.html)
+   ?next=upload.html  -> where to go after logging in / signing up
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Grab DOM elements for Login
-    const loginForm = document.getElementById("login-form");
-    const loginEmail = document.getElementById("login-email");
-    const loginPassword = document.getElementById("login-password");
+  const db = window.supabaseClient;
+  const params = new URLSearchParams(window.location.search);
+
+  // Only allow redirects to our own pages (e.g. "upload.html?comic=x")
+  const rawNext = params.get("next") || "";
+  const isSafeNext = /^[a-z0-9-]+\.html(\?.*)?$/i.test(rawNext) && !/^(login|signup)\.html/i.test(rawNext);
+  const nextPage = isSafeNext ? rawNext : "index.html";
+
+  // Old links used login.html?tab=signup; send those to the Sign Up page
+  if (params.get("tab") === "signup" && document.getElementById("login-form")) {
+    window.location.replace(`signup.html${isSafeNext ? `?next=${encodeURIComponent(rawNext)}` : ""}`);
+    return;
+  }
+
+  // Keep ?next= when hopping between the Log In and Sign Up pages
+  if (isSafeNext) {
+    document.querySelectorAll("a[data-auth-link]").forEach((a) => {
+      a.href = `${a.getAttribute("href")}?next=${encodeURIComponent(rawNext)}`;
+    });
+  }
+
+  function showMessage(target, message, type) {
+    target.textContent = message;
+    target.className = `auth-message upload-status-${type}`;
+  }
+
+  // ---- Already logged in? Offer to continue or switch account --------------
+  db.auth.getSession().then(({ data: { session } }) => {
+    if (!session) return;
+    const notice = document.createElement("div");
+    notice.className = "auth-message upload-status-info";
+    notice.style.margin = "0 0 1.5rem";
+    notice.innerHTML = `
+      You're already logged in as <strong></strong>.
+      <div style="display:flex; gap:0.5rem; margin-top:0.75rem; flex-wrap:wrap;">
+        <a href="${nextPage}" class="btn btn-sm">Continue</a>
+        <button type="button" class="btn btn-outline btn-sm" id="switch-account-btn">Log out to switch account</button>
+      </div>`;
+    notice.querySelector("strong").textContent = session.user.email;
+    document.querySelector(".auth-tabs").before(notice);
+
+    document.getElementById("switch-account-btn").addEventListener("click", async () => {
+      await db.auth.signOut();
+      notice.remove();
+    });
+  });
+
+  // ---- Log in (login.html) ------------------------------------------------
+  const loginForm = document.getElementById("login-form");
+  if (loginForm) {
     const loginBtn = document.getElementById("login-btn");
     const loginMessage = document.getElementById("login-message");
 
-    // 2. Grab DOM elements for Sign Up
-    const signupForm = document.getElementById("signup-form");
-    const signupUsername = document.getElementById("signup-username");
-    const signupEmail = document.getElementById("signup-email");
-    const signupPassword = document.getElementById("signup-password");
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      loginBtn.disabled = true;
+      showMessage(loginMessage, "Logging in...", "info");
+
+      const { error } = await db.auth.signInWithPassword({
+        email: document.getElementById("login-email").value.trim(),
+        password: document.getElementById("login-password").value,
+      });
+
+      if (error) {
+        showMessage(loginMessage, error.message, "error");
+        loginBtn.disabled = false;
+        return;
+      }
+      showMessage(loginMessage, "Logged in! Redirecting...", "success");
+      window.location.href = nextPage;
+    });
+  }
+
+  // ---- Sign up (signup.html) ----------------------------------------------
+  const signupForm = document.getElementById("signup-form");
+  if (signupForm) {
     const signupBtn = document.getElementById("signup-btn");
     const signupMessage = document.getElementById("signup-message");
 
-    // UI feedback helper
-    function showMessage(targetEl, message, isError = false) {
-        if (!targetEl) return;
-        targetEl.textContent = message;
-        targetEl.style.color = isError ? "#ff4c4c" : "#4caf50";
-        targetEl.style.marginTop = "12px";
-        targetEl.style.fontSize = "0.9rem";
-    }
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("signup-username").value.trim();
 
-    // 3. Handle Login Submit
-    if (loginForm) {
-        loginForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            loginBtn.disabled = true;
-            showMessage(loginMessage, "Logging in...", false);
+      if (username.length < 3) {
+        return showMessage(signupMessage, "Username must be at least 3 characters.", "error");
+      }
 
-            const { data, error } = await window.supabaseClient.auth.signInWithPassword({
-                email: loginEmail.value.trim(),
-                password: loginPassword.value
-            });
+      signupBtn.disabled = true;
+      showMessage(signupMessage, "Creating account...", "info");
 
-            if (error) {
-                showMessage(loginMessage, error.message, true);
-                loginBtn.disabled = false;
-            } else {
-                showMessage(loginMessage, "Login successful! Redirecting...", false);
-                setTimeout(() => window.location.href = "index.html", 1000);
-            }
-        });
-    }
+      const { data, error } = await db.auth.signUp({
+        email: document.getElementById("signup-email").value.trim(),
+        password: document.getElementById("signup-password").value,
+        options: { data: { username } }, // read by the trigger that fills public.profiles
+      });
 
-    // 4. Handle Sign Up Submit
-    if (signupForm) {
-        signupForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            signupBtn.disabled = true;
-            showMessage(signupMessage, "Creating account...", false);
+      signupBtn.disabled = false;
 
-            const { data, error } = await window.supabaseClient.auth.signUp({
-                email: signupEmail.value.trim(),
-                password: signupPassword.value,
-                options: {
-                    data: {
-                        // Metadata passed to trigger for populating public.profiles
-                        username: signupUsername ? signupUsername.value.trim() : ""
-                    }
-                }
-            });
+      if (error) return showMessage(signupMessage, error.message, "error");
 
-            if (error) {
-                showMessage(signupMessage, error.message, true);
-                signupBtn.disabled = false;
-            } else {
-                showMessage(signupMessage, "Account created! You can now log in.", false);
-                signupBtn.disabled = false;
-            }
-        });
-    }
-    // 5. UI Toggle Logic (Switch between Login and Sign Up)
-    const showSignupLink = document.getElementById("show-signup");
-    const showLoginLink = document.getElementById("show-login");
-
-    if (showSignupLink && showLoginLink) {
-        showSignupLink.addEventListener("click", (e) => {
-            e.preventDefault(); // Prevent page jump
-            loginForm.classList.add("hidden");
-            signupForm.classList.remove("hidden");
-        });
-
-        showLoginLink.addEventListener("click", (e) => {
-            e.preventDefault(); // Prevent page jump
-            signupForm.classList.add("hidden");
-            loginForm.classList.remove("hidden");
-        });
-    }
+      if (data.session) {
+        // Email confirmation is off: they're logged in already
+        showMessage(signupMessage, "Account created! Redirecting...", "success");
+        window.location.href = nextPage;
+      } else {
+        showMessage(signupMessage, "Account created! Check your email to confirm it, then log in.", "success");
+        signupForm.reset();
+      }
+    });
+  }
 });

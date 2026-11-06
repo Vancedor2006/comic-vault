@@ -1,132 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comic Site Skeleton</title>
-    <link rel="stylesheet" href="css/styles.css" type="text/css">
-    <!-- Supabase JS Client CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="supabase.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ComicVault - Read Webcomics</title>
+  <meta name="description" content="Read webcomics the way their creators intended: vertical scroll, manga, or western page-turns.">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
-
 <body>
-    <!-- HEADER & NAVIGATION -->
-    <header class="site-header">
-        <div class="container nav-wrapper">
-            <a href="#" class="logo">ComicVault</a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="browse.html">Browse</a></li>
-                    <li><a href="upload.html">Upload</a></li>
-                    <li><!-- Dynamic auth container populated by auth-nav.js -->
-      <div id="nav-user-container"></div></li>
-                </ul>
-            </nav>
+
+  <!-- ===== Shared header ===== -->
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><span class="logo-mark">CV</span>ComicVault</a>
+      <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
+      <nav class="site-nav" id="site-nav">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="browse.html">Browse</a></li>
+          <li><a href="upload.html">Publish</a></li>
+          <li><div id="nav-user-container"></div></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Search (sends to browse.html?q=...) -->
+    <form id="home-search-form" class="home-search" role="search">
+      <input type="search" id="home-search-input" class="input-field" placeholder="Search comics by title..." aria-label="Search comics">
+      <button type="submit" class="btn">Search</button>
+    </form>
+
+    <!-- Featured comic (filled by index.js) -->
+    <section class="hero">
+      <div class="hero-card" id="hero-card">
+        <div class="hero-text">
+          <div class="skeleton-line" style="width: 90px;"></div>
+          <div class="skeleton-line" style="width: 50%; height: 2.4rem;"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
         </div>
-    </header>
+      </div>
+    </section>
 
-    <main class="container">
-        
-        <!-- FEATURED HERO SECTION -->
-        <section class="hero">
-            <div class="hero-card">
-                <h1 class="hero-title">Featured Comic Title</h1>
-                <p class="hero-description">Brief summary or synopsis of the featured comic series goes here. Keep it concise to inform readers what the story is about before they dive in.</p>
-                <a href="#" class="btn">Read First Chapter</a>
-            </div>
-        </section>
+    <!-- Latest chapter updates (filled by index.js) -->
+    <section class="updates">
+      <div class="section-heading-row">
+        <h2 class="section-heading">Latest Updates</h2>
+        <a href="browse.html" class="see-all">Browse all &rarr;</a>
+      </div>
+      <div class="comic-grid" id="latest-grid"></div>
+    </section>
 
-        <!-- LATEST UPDATES GRID SECTION -->
-        <section class="updates">
-            <h2 class="section-heading">Latest Updates</h2>
-            
-            <div class="comic-grid">
-                
-                <article>
-                    <a href="#" class="comic-card">
-                        <img src="https://placehold.co/300x450/2a2a2e/a0a0a8?text=Cover+1" alt="Comic Cover 1" class="comic-cover">
-                        <div class="comic-meta">
-                            <h3 class="comic-title">Series Name Alpha</h3>
-                            <span class="comic-chapter">Ch. 42</span>
-                        </div>
-                    </a>
-                </article>
+  </main>
 
-                <article>
-                    <a href="#" class="comic-card">
-                        <img src="https://placehold.co/300x450/2a2a2e/a0a0a8?text=Cover+2" alt="Comic Cover 2" class="comic-cover">
-                        <div class="comic-meta">
-                            <h3 class="comic-title">Series Name Beta</h3>
-                            <span class="comic-chapter">Ch. 105</span>
-                        </div>
-                    </a>
-                </article>
+  <!-- ===== Shared footer ===== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 ComicVault. Built for webcomic creators and readers.</p>
+      <nav><a href="browse.html">Browse</a><a href="upload.html">Publish</a></nav>
+    </div>
+  </footer>
 
-                <article>
-                    <a href="#" class="comic-card">
-                        <img src="https://placehold.co/300x450/2a2a2e/a0a0a8?text=Cover+3" alt="Comic Cover 3" class="comic-cover">
-                        <div class="comic-meta">
-                            <h3 class="comic-title">Series Name Gamma</h3>
-                            <span class="comic-chapter">Ch. 12</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article>
-                    <a href="#" class="comic-card">
-                        <img src="https://placehold.co/300x450/2a2a2e/a0a0a8?text=Cover+4" alt="Comic Cover 4" class="comic-cover">
-                        <div class="comic-meta">
-                            <h3 class="comic-title">Series Name Delta</h3>
-                            <span class="comic-chapter">Ch. 88</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article>
-                    <a href="#" class="comic-card">
-                        <img src="https://placehold.co/300x450/2a2a2e/a0a0a8?text=Cover+5" alt="Comic Cover 5" class="comic-cover">
-                        <div class="comic-meta">
-                            <h3 class="comic-title">Series Name Epsilon</h3>
-                            <span class="comic-chapter">Ch. 01</span>
-                        </div>
-                    </a>
-                </article>
-
-                <article>
-                    <a href="#" class="comic-card">
-                        <img src="https://placehold.co/300x450/2a2a2e/a0a0a8?text=Cover+6" alt="Comic Cover 6" class="comic-cover">
-                        <div class="comic-meta">
-                            <h3 class="comic-title">Series Name Zeta</h3>
-                            <span class="comic-chapter">Ch. 230</span>
-                        </div>
-                    </a>
-                </article>
-
-            </div>
-        </section>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 ComicVault. Minimal Homepage Skeleton.</p>
-        </div>
-    </footer>
-
-    <!-- 1. Load Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <!-- 2. Initialize connection -->
-    <script src="supabase.js"></script>
-
-    <!-- 3. Global Navigation Logic -->
-    <script src="auth-nav.js"></script>
-
-    <!-- 4. Page-specific logic (e.g., login.js only goes on login.html) -->
-    <!-- <script src="page-specific.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="auth-nav.js"></script>
+  <script src="index.js"></script>
 </body>
 </html>

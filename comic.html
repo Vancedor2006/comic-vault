@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comic - ComicVault</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ===== Shared header ===== -->
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><span class="logo-mark">CV</span>ComicVault</a>
+      <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
+      <nav class="site-nav" id="site-nav">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="browse.html">Browse</a></li>
+          <li><a href="upload.html">Publish</a></li>
+          <li><div id="nav-user-container"></div></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="series-root">
+    <!-- Filled by comic.js -->
+    <section class="series-hero" aria-busy="true">
+      <div class="series-cover skeleton-block"></div>
+      <div class="series-info">
+        <div class="skeleton-line" style="width: 60%; height: 2.4rem;"></div>
+        <div class="skeleton-line" style="width: 30%;"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Shared footer ===== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 ComicVault. Built for webcomic creators and readers.</p>
+      <nav><a href="browse.html">Browse</a><a href="upload.html">Publish</a></nav>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="auth-nav.js"></script>
+  <script src="comic.js"></script>
+</body>
+</html>

@@ -3,121 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reading Neon Rebel - Chapter 1 | ComicVault</title>
+  <title>Reader - ComicVault</title>
   <link rel="stylesheet" href="css/styles.css">
-  <!-- Supabase JS Client CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase.js"></script>
 </head>
 <body class="reader-body">
 
-  <!-- Shared Header & Navigation Bar -->
-  <header class="header">
-    <div class="logo">ComicVault</div>
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="browse.html">Browse</a>
-      <a href="upload.html">Upload</a>
-      <!-- Dynamic auth container populated by auth-nav.js -->
-      <div id="nav-user-container"></div>
-    </nav>
+  <!-- ===== Shared header ===== -->
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><span class="logo-mark">CV</span>ComicVault</a>
+      <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
+      <nav class="site-nav" id="site-nav">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="browse.html">Browse</a></li>
+          <li><a href="upload.html">Publish</a></li>
+          <li><div id="nav-user-container"></div></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
-  <main class="reader-container">
-    
-    <!-- Reader Top Toolbar (Controls & Mode Switching) -->
+  <main class="reader-container" id="reader-root">
+
+    <!-- Toolbar -->
     <section class="reader-toolbar">
       <div class="comic-title-info">
-        <a href="browse.html" class="back-link">&larr; Back to Comic</a>
-        <h1 id="comic-title">Neon Rebel</h1>
-        <span class="chapter-subtitle" id="chapter-title">Chapter 1: Cyber City</span>
+        <a href="browse.html" class="back-link" id="back-link">&larr; Back to series</a>
+        <h1><a href="#" id="comic-title">Loading...</a></h1>
+        <span class="chapter-subtitle" id="chapter-title">&nbsp;</span>
       </div>
 
       <div class="toolbar-controls">
-        <!-- Chapter Selector -->
-        <!-- JS PLACEHOLDER: JS will populate this dropdown with all available chapters -->
-        <select id="chapter-select" class="select-field">
-          <option value="1" selected>Chapter 1: Cyber City</option>
-          <option value="2">Chapter 2: The Neon Alley</option>
-          <option value="3">Chapter 3: System Override</option>
-        </select>
-
-        <!-- Reading Mode -->
-        <!-- JS PLACEHOLDER: Changing this dropdown will dynamically toggle CSS classes on #reader-display -->
-        <div class="mode-indicator">
-          <span id="creator-intent-badge" class="badge">Loading Mode...</span>
-        </div>
+        <label for="chapter-select" class="visually-hidden">Jump to chapter</label>
+        <select id="chapter-select" class="select-field" disabled></select>
+        <span id="creator-intent-badge" class="badge">Loading...</span>
       </div>
     </section>
 
-    <!-- Hotkey / Guidance Tip -->
-    <div class="reader-tip">
-      <small>Tip: Use <strong>Left / Right Arrow keys</strong> to turn pages in single-page mode.</small>
-    </div>
+    <p class="reader-tip hidden" id="reader-tip">
+      Tip: use <kbd>&larr;</kbd> <kbd>&rarr;</kbd> or tap the sides of the page to turn pages.
+    </p>
 
-    <!-- MAIN COMIC DISPLAY AREA -->
-    <!-- JS PLACEHOLDER: Phase 2 JS will manipulate this section to display images based on selected mode -->
-    <div id="reader-display" class="reader-display mode-infinite">
+    <!-- Comic display -->
+    <div id="reader-display" class="reader-display">
+      <div class="reader-loading skeleton-block" id="reader-loading"></div>
 
-      <!-- ============================================================ -->
-      <!-- OPTION A: INFINITE SCROLL MODE (Webtoon Style)               -->
-      <!-- Images stack vertically with zero margins between them.      -->
-      <!-- ============================================================ -->
-      <div id="infinite-wrapper" class="infinite-wrapper">
-        <img src="https://via.placeholder.com/800x1200/1e293b/ffffff?text=Page+1+(Infinite+Scroll)" alt="Page 1" class="webtoon-page">
-        <img src="https://via.placeholder.com/800x1200/334155/ffffff?text=Page+2+(Infinite+Scroll)" alt="Page 2" class="webtoon-page">
-        <img src="https://via.placeholder.com/800x1200/475569/ffffff?text=Page+3+(Infinite+Scroll)" alt="Page 3" class="webtoon-page">
+      <!-- Vertical / webtoon mode -->
+      <div id="infinite-wrapper" class="infinite-wrapper hidden"></div>
+
+      <!-- Single-page mode (LTR / RTL) -->
+      <div id="single-page-wrapper" class="single-page-wrapper hidden">
+        <button type="button" id="prev-page-btn" class="page-nav-overlay prev-overlay" aria-label="Previous page">&lsaquo;</button>
+        <img id="active-page-img" alt="" class="single-page">
+        <button type="button" id="next-page-btn" class="page-nav-overlay next-overlay" aria-label="Next page">&rsaquo;</button>
       </div>
-
-      <!-- ============================================================ -->
-      <!-- OPTION B: SINGLE PAGE MODE (LTR / RTL Manga Style)           -->
-      <!-- Hidden by default until JS or mode selector switches to it.   -->
-      <!-- ============================================================ -->
-      <div id="single-page-wrapper" class="single-page-wrapper" style="display: none;">
-        
-        <!-- Left Touch/Click Zone to turn page -->
-        <button id="prev-page-btn" class="page-nav-overlay prev-overlay" title="Previous Page">&lsaquo;</button>
-        
-        <!-- Currently Active Comic Page -->
-        <img id="active-page-img" src="https://via.placeholder.com/800x1200/1e293b/ffffff?text=Single+Page+View+(Page+1)" alt="Comic Page" class="single-page">
-        
-        <!-- Right Touch/Click Zone to turn page -->
-        <button id="next-page-btn" class="page-nav-overlay next-overlay" title="Next Page">&rsaquo;</button>
-      </div>
-
     </div>
 
-    <!-- Page Counter (Visible in Single-Page Mode) -->
-    <div id="page-counter" class="page-counter" style="display: none;">
-      Page <span id="current-page-num">1</span> of <span id="total-pages-num">3</span>
+    <div id="page-counter" class="page-counter hidden">
+      Page <span id="current-page-num">1</span> of <span id="total-pages-num">1</span>
     </div>
 
-    <!-- Bottom Navigation Bar -->
-    <section class="reader-bottom-nav">
-      <button id="prev-chapter-btn" class="btn btn-secondary" disabled>&laquo; Previous Chapter</button>
-      <button id="scroll-top-btn" class="btn btn-secondary" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">Top &uarr;</button>
-      <button id="next-chapter-btn" class="btn btn-primary">Next Chapter &raquo;</button>
+    <!-- End-of-chapter panel -->
+    <section id="chapter-end" class="chapter-end hidden">
+      <h2>End of chapter</h2>
+      <p id="chapter-end-text"></p>
+      <div id="chapter-end-actions"></div>
     </section>
+
+    <!-- Bottom nav -->
+    <nav class="reader-bottom-nav" aria-label="Chapter navigation">
+      <a id="prev-chapter-btn" class="btn btn-secondary" aria-disabled="true">&laquo; Prev chapter</a>
+      <button type="button" id="scroll-top-btn" class="btn btn-ghost">Top &uarr;</button>
+      <a id="next-chapter-btn" class="btn btn-primary" aria-disabled="true">Next chapter &raquo;</a>
+    </nav>
 
   </main>
 
-  <footer class="footer">
-    <p>&copy; 2026 ComicVault. Built for webcomic creators and readers.</p>
-  </footer>
-
-<!-- Reader Logic -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="auth-nav.js"></script>
   <script src="reader.js"></script>
-
-  <!-- 1. Load Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <!-- 2. Initialize connection -->
-    <script src="supabase.js"></script>
-
-    <!-- 3. Global Navigation Logic -->
-    <script src="auth-nav.js"></script>
-
-    <!-- 4. Page-specific logic (e.g., login.js only goes on login.html) -->
-    <!-- <script src="page-specific.js"></script> -->
 </body>
 </html>

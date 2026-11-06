@@ -5,40 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Browse Webcomics - ComicVault</title>
   <link rel="stylesheet" href="css/styles.css">
-  <!-- Supabase JS Client CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase.js"></script>
 </head>
 <body>
 
-  <!-- Shared Header & Navigation Bar -->
-  <header class="header">
-    <div class="logo">ComicVault</div>
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="browse.html" class="active">Browse</a>
-      <a href="upload.html">Upload</a>
-      <!-- Dynamic auth container populated by auth-nav.js -->
-      <div id="nav-user-container"></div>
-    </nav>
+  <!-- ===== Shared header ===== -->
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><span class="logo-mark">CV</span>ComicVault</a>
+      <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
+      <nav class="site-nav" id="site-nav">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="browse.html">Browse</a></li>
+          <li><a href="upload.html">Publish</a></li>
+          <li><div id="nav-user-container"></div></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
   <main class="container">
-    <section class="browse-header">
+    <section class="page-header">
       <h1>Browse Comics</h1>
-      <p>Filter by genre, reading direction, or search by title.</p>
+      <p>Search by title, or filter by genre and reading direction.</p>
     </section>
 
-    <!-- Search & Filter Controls -->
-    <!-- JS PLACEHOLDER: In Phase 2, JavaScript will listen for input/change events to filter the cards below -->
+    <!-- Search & filters (handled by browse.js) -->
     <section class="filter-section">
-      <form class="filter-form" onsubmit="event.preventDefault();">
-        <div class="filter-group">
-          <input type="text" id="search-input" placeholder="Search comics by title..." class="input-field">
+      <form class="filter-form" role="search" onsubmit="event.preventDefault();">
+        <div class="filter-group filter-group-search">
+          <input type="search" id="search-input" placeholder="Search comics by title..." class="input-field" aria-label="Search comics by title">
         </div>
 
         <div class="filter-group">
-          <select id="genre-select" class="select-field">
+          <select id="genre-select" class="select-field" aria-label="Genre">
             <option value="">All Genres</option>
             <option value="action">Action</option>
             <option value="fantasy">Fantasy</option>
@@ -49,106 +49,44 @@
         </div>
 
         <div class="filter-group">
-          <select id="format-select" class="select-field">
+          <select id="format-select" class="select-field" aria-label="Reading format">
             <option value="">All Formats</option>
-            <option value="ltr">Left to Right (LTR)</option>
-            <option value="rtl">Right to Left (RTL)</option>
-            <option value="infinite">Infinite Scroll</option>
+            <option value="infinite">Vertical Scroll</option>
+            <option value="rtl">Manga (Right to Left)</option>
+            <option value="ltr">Western (Left to Right)</option>
           </select>
         </div>
 
         <div class="filter-group">
-          <select id="sort-select" class="select-field">
+          <select id="sort-select" class="select-field" aria-label="Sort order">
             <option value="newest">Newest First</option>
-            <option value="popular">Most Popular</option>
-            <option value="az">Alphabetical (A-Z)</option>
+            <option value="oldest">Oldest First</option>
+            <option value="az">Title A-Z</option>
+            <option value="za">Title Z-A</option>
           </select>
         </div>
       </form>
+      <p id="results-info" class="results-info" aria-live="polite"></p>
     </section>
 
-    <!-- Comic Grid Container -->
-    <!-- JS PLACEHOLDER: In Phase 2 & 3, JavaScript will empty this grid and populate it dynamically from Supabase -->
-    <section class="comic-grid" id="browse-grid">
+    <!-- Comic grid (filled by browse.js) -->
+    <section class="comic-grid" id="browse-grid"></section>
 
-      <!-- Placeholder Comic Card 1 -->
-      <article class="comic-card" data-genre="scifi" data-format="infinite">
-        <div class="cover-container">
-          <span class="badge badge-infinite">Infinite Scroll</span>
-          <img src="https://via.placeholder.com/300x420/1e293b/ffffff?text=Neon+Rebel" alt="Neon Rebel Cover">
-        </div>
-        <div class="comic-info">
-          <h3><a href="reader.html?comic=neon-rebel">Neon Rebel</a></h3>
-          <p class="author">By Alex Vance</p>
-          <div class="tags">
-            <span class="tag">Sci-Fi</span>
-            <span class="tag">Action</span>
-          </div>
-          <p class="chapter-count">14 Chapters</p>
-        </div>
-      </article>
-
-      <!-- Placeholder Comic Card 2 -->
-      <article class="comic-card" data-genre="fantasy" data-format="rtl">
-        <div class="cover-container">
-          <span class="badge badge-rtl">Manga (RTL)</span>
-          <img src="https://via.placeholder.com/300x420/1e293b/ffffff?text=Shadow+Blade" alt="Shadow Blade Cover">
-        </div>
-        <div class="comic-info">
-          <h3><a href="reader.html?comic=shadow-blade">Shadow Blade</a></h3>
-          <p class="author">By K. Takahashi</p>
-          <div class="tags">
-            <span class="tag">Fantasy</span>
-          </div>
-          <p class="chapter-count">48 Chapters</p>
-        </div>
-      </article>
-
-      <!-- Placeholder Comic Card 3 -->
-      <article class="comic-card" data-genre="romance" data-format="ltr">
-        <div class="cover-container">
-          <span class="badge badge-ltr">Western (LTR)</span>
-          <img src="https://via.placeholder.com/300x420/1e293b/ffffff?text=Summer+Breeze" alt="Summer Breeze Cover">
-        </div>
-        <div class="comic-info">
-          <h3><a href="reader.html?comic=summer-breeze">Summer Breeze</a></h3>
-          <p class="author">By Elena R.</p>
-          <div class="tags">
-            <span class="tag">Romance</span>
-            <span class="tag">Slice of Life</span>
-          </div>
-          <p class="chapter-count">8 Chapters</p>
-        </div>
-      </article>
-
-    </section>
-
-    <!-- Pagination Controls Placeholder -->
-    <nav class="pagination" aria-label="Page navigation">
-      <button disabled>&laquo; Previous</button>
-      <button class="page-btn active">1</button>
-      <button class="page-btn">2</button>
-      <button class="page-btn">3</button>
-      <button>&raquo; Next</button>
-    </nav>
+    <!-- Pagination (filled by browse.js) -->
+    <nav class="pagination" id="pagination" aria-label="Page navigation"></nav>
   </main>
 
-  <footer class="footer">
-    <p>&copy; 2026 ComicVault. Built for webcomic creators and readers.</p>
+  <!-- ===== Shared footer ===== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 ComicVault. Built for webcomic creators and readers.</p>
+      <nav><a href="browse.html">Browse</a><a href="upload.html">Publish</a></nav>
+    </div>
   </footer>
 
-  <!-- JS PLACEHOLDER: Un-comment when you create browse.js in Phase 2 -->
-  <!-- <script src="browse.js"></script> -->
-<!-- 1. Load Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <!-- 2. Initialize connection -->
-    <script src="supabase.js"></script>
-
-    <!-- 3. Global Navigation Logic -->
-    <script src="auth-nav.js"></script>
-
-    <!-- 4. Page-specific logic (e.g., login.js only goes on login.html) -->
-    <!-- <script src="page-specific.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="auth-nav.js"></script>
+  <script src="browse.js"></script>
 </body>
 </html>

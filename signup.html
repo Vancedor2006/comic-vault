@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up - ComicVault</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ===== Shared header ===== -->
+  <header class="site-header">
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo"><span class="logo-mark">CV</span>ComicVault</a>
+      <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
+      <nav class="site-nav" id="site-nav">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="browse.html">Browse</a></li>
+          <li><a href="upload.html">Publish</a></li>
+          <li><div id="nav-user-container"></div></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="auth-container">
+    <div class="auth-card">
+
+      <nav class="auth-tabs" aria-label="Account">
+        <a href="login.html" class="tab-btn" data-auth-link>Log In</a>
+        <a href="signup.html" class="tab-btn active" data-auth-link aria-current="page">Sign Up</a>
+      </nav>
+
+      <!-- Sign up -->
+      <form id="signup-form" class="auth-form">
+        <h2>Create an account</h2>
+        <p class="auth-subtitle">Join ComicVault to publish your own series.</p>
+
+        <div class="form-group">
+          <label for="signup-username">Username / creator name</label>
+          <input type="text" id="signup-username" class="input-field" placeholder="e.g. AlexVance" autocomplete="username" minlength="3" maxlength="30" required>
+        </div>
+
+        <div class="form-group">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" class="input-field" placeholder="you@example.com" autocomplete="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" class="input-field" placeholder="At least 6 characters" autocomplete="new-password" minlength="6" required>
+        </div>
+
+        <button type="submit" id="signup-btn" class="btn btn-full btn-large">Create Account</button>
+        <p id="signup-message" class="auth-message" role="status"></p>
+        <p class="auth-switch">Already have an account? <a href="login.html" data-auth-link>Log in</a></p>
+      </form>
+    </div>
+  </main>
+
+  <!-- ===== Shared footer ===== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 ComicVault. Built for webcomic creators and readers.</p>
+      <nav><a href="browse.html">Browse</a><a href="upload.html">Publish</a></nav>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="auth-nav.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>

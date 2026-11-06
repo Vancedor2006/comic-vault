@@ -1,0 +1,23 @@
+{
+    // Starts a simple local web server for the site on http://localhost:8080
+    // Used automatically by the "Launch Chrome against localhost" debug config.
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start local server",
+            "type": "shell",
+            "command": "python -u .vscode/dev_server.py",
+            "isBackground": true,
+            "problemMatcher": {
+                "owner": "custom",
+                "pattern": { "regexp": "^__never_matches__$" },
+                "background": {
+                    "activesBegin": true,
+                    "beginsPattern": "Serving HTTP",
+                    "endsPattern": "Serving HTTP"
+                }
+            },
+            "presentation": { "reveal": "silent", "panel": "dedicated" }
+        }
+    ]
+}

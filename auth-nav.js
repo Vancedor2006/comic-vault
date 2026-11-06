@@ -1,59 +1,77 @@
 /* ==========================================================================
-   Global Header Navigation & Session Persistence
+   ComicVault - Shared header: session-aware nav, active link, mobile menu
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Target the placeholder in your HTML header
-    const navContainer = document.getElementById("nav-user-container");
-    if (!navContainer) return; // Exit if the current page doesn't have a header
+  const db = window.supabaseClient;
+  const navContainer = document.getElementById("nav-user-container");
 
-    // Renders the default Log In / Sign Up buttons
-    function renderLoggedOut() {
-        navContainer.innerHTML = `
-            <a href="login.html" class="btn btn-outline" style="margin-right: 10px;">Log In</a>
-            <a href="login.html" class="btn btn-primary">Sign Up</a>
-        `;
+  // ---- Highlight the link for the current page ----------------------------
+  const currentPage = window.location.pathname.split("/").pop() || "index.html";
+  document.querySelectorAll(".nav-links a[href]").forEach((a) => {
+    if (a.getAttribute("href") === currentPage) {
+      a.classList.add("active");
+      a.setAttribute("aria-current", "page");
     }
+  });
 
-    // Renders the User Menu and Logout button
-    async function renderLoggedIn(user) {
-        // Fetch the username from the profiles table using the authenticated user's ID
-        const { data: profile, error } = await window.supabaseClient
-            .from('profiles')
-            .select('username')
-            .eq('id', user.id)
-            .single();
+  // ---- Mobile menu toggle -------------------------------------------------
+  const toggle = document.querySelector(".nav-toggle");
+  const siteNav = document.getElementById("site-nav");
+  if (toggle && siteNav) {
+    toggle.addEventListener("click", () => {
+      const open = siteNav.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.innerHTML = open ? "&times;" : "&#9776;";
+    });
+  }
 
-        // Fallback to "Creator" if the username hasn't loaded properly
-        const username = profile?.username || "Creator";
+  if (!navContainer || !db) return;
 
-        navContainer.innerHTML = `
-            <span style="margin-right: 15px;">Welcome, <strong>${username}</strong></span>
-            <button id="logout-btn" class="btn btn-outline">Log Out</button>
-        `;
+  // Send people back to the page they were on after logging in
+  const here = currentPage + window.location.search;
+  const onAuthPage = currentPage === "login.html" || currentPage === "signup.html";
+  const next = onAuthPage ? "" : `next=${encodeURIComponent(here)}`;
 
-        // Attach the event listener to the newly injected logout button
-        document.getElementById("logout-btn").addEventListener("click", async () => {
-            await window.supabaseClient.auth.signOut();
-            window.location.href = "index.html"; // Redirect to homepage on logout
-        });
+  function escapeHtml(str) {
+    return String(str ?? "").replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  function renderLoggedOut() {
+    navContainer.innerHTML = `
+      <a href="login.html${next ? `?${next}` : ""}" class="btn btn-ghost btn-sm">Log In</a>
+      <a href="signup.html${next ? `?${next}` : ""}" class="btn btn-primary btn-sm">Sign Up</a>`;
+  }
+
+  let renderedUserId = null;
+  async function renderLoggedIn(user) {
+    if (renderedUserId === user.id) return; // avoid double render on page load
+    renderedUserId = user.id;
+
+    const { data: profile } = await db.from("profiles").select("username").eq("id", user.id).maybeSingle();
+    const username = profile?.username || user.user_metadata?.username || "Creator";
+
+    navContainer.innerHTML = `
+      <span class="nav-username">Hi, <strong>${escapeHtml(username)}</strong></span>
+      <button type="button" id="logout-btn" class="btn btn-outline btn-sm">Log Out</button>`;
+
+    document.getElementById("logout-btn").addEventListener("click", async () => {
+      await db.auth.signOut();
+      window.location.href = "index.html";
+    });
+  }
+
+  db.auth.getSession().then(({ data: { session } }) => {
+    if (session) renderLoggedIn(session.user);
+    else renderLoggedOut();
+  });
+
+  db.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_IN" && session) renderLoggedIn(session.user);
+    else if (event === "SIGNED_OUT") {
+      renderedUserId = null;
+      renderLoggedOut();
     }
-
-    // 1. Check the initial session state when the page loads
-    window.supabaseClient.auth.getSession().then(({ data: { session } }) => {
-        if (session) {
-            renderLoggedIn(session.user);
-        } else {
-            renderLoggedOut();
-        }
-    });
-
-    // 2. Listen for real-time auth changes across tabs/pages
-    window.supabaseClient.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_IN' && session) {
-            renderLoggedIn(session.user);
-        } else if (event === 'SIGNED_OUT') {
-            renderLoggedOut();
-        }
-    });
+  });
 });
