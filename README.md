@@ -9,5 +9,5 @@ A webcomic hosting platform built to preserve creator-intended reading pacing (L
   - Implemented core CSS styling for dark-mode theater reading and file upload dropzones.
 - [x] Phase 2: Dynamic Reader Engine & State Management
   - Built `reader.js` engine to lock and render view modes automatically based on comic metadata.
-- [ ] Phase 3: Supabase Backend Integration
+- [x] Phase 3: Supabase Backend Integration
   - PostgreSQL schema, user authentication, and object storage for comic uploads.
