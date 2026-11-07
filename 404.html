@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page not found - ComicVault</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0e0e11">
+  <!-- GitHub Pages shows this file for any missing address, including nested
+       ones like /comic-vault/a/b, where relative links would break. So this
+       page is self-contained and works out the site's root with JavaScript. -->
+  <style>
+    :root { color-scheme: dark; --bg: #0e0e11; --text: #f2f1ee; --muted: #b4b3bc; --accent: #d23c1f; --border: #2c2c36; }
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) { color-scheme: light; --bg: #f6f5f2; --text: #16151a; --muted: #4a4952; --border: #dcd9d1; }
+    }
+    :root[data-theme="light"] { color-scheme: light; --bg: #f6f5f2; --text: #16151a; --muted: #4a4952; --border: #dcd9d1; }
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      min-height: 100vh; display: grid; place-items: center; padding: 2rem 1.25rem; text-align: center;
+      background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.55;
+    }
+    svg { width: 72px; height: 72px; margin: 0 auto 1.25rem; display: block; }
+    .code { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.15em; color: var(--muted); }
+    h1 { font-size: clamp(1.8rem, 5vw, 2.5rem); margin: 0.35rem 0 0.6rem; }
+    p { color: var(--muted); max-width: 30rem; margin: 0 auto; }
+    .actions { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-top: 1.75rem; }
+    a { display: inline-block; padding: 0.7rem 1.2rem; border-radius: 6px; font-weight: 600; text-decoration: none; }
+    .primary { background: var(--accent); color: #fff; }
+    .secondary { border: 1px solid var(--border); color: var(--text); }
+    a:focus-visible { outline: 2px solid #ff5c39; outline-offset: 2px; }
+  </style>
+  <script>
+    try {
+      var t = JSON.parse(localStorage.getItem("cv-theme"));
+      if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <main>
+    <svg viewBox="0 0 64 64" aria-hidden="true"><g transform="rotate(-6 32 32)"><rect x="6" y="6" width="52" height="52" rx="13" fill="#ff5c39"/><rect x="15" y="15" width="15" height="34" rx="2.5" fill="#fff"/><path d="M36.5 15h10a2.5 2.5 0 0 1 2.5 2.5v9.3L34 30.4V17.5a2.5 2.5 0 0 1 2.5-2.5z" fill="#fff"/><path d="M34 34.6l15-3.6v15.5a2.5 2.5 0 0 1-2.5 2.5h-10a2.5 2.5 0 0 1-2.5-2.5z" fill="#fff"/></g></svg>
+    <p class="code">404</p>
+    <h1>This page isn't in the vault</h1>
+    <p>The link may be broken, or the page was moved or deleted.</p>
+    <div class="actions">
+      <a class="primary" href="index.html" data-site-link>Go to the home page</a>
+      <a class="secondary" href="browse.html" data-site-link>Browse comics</a>
+    </div>
+  </main>
+  <script>
+    // On GitHub Pages project sites the site lives under /<repo>/
+    (function () {
+      var root = "/";
+      if (/\.github\.io$/i.test(location.hostname)) {
+        var first = location.pathname.split("/")[1];
+        if (first) root = "/" + first + "/";
+      }
+      document.querySelectorAll("[data-site-link]").forEach(function (a) {
+        a.href = root + a.getAttribute("href");
+      });
+    })();
+  </script>
+</body>
+</html>

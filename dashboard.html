@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Comics - ComicVault</title>
+  <meta name="description" content="Manage the comics you've published on ComicVault.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0e0e11">
+  <link rel="icon" href="assets/icon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ComicVault">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <script src="common.js"></script>
+
+  <main id="main" class="container" tabindex="-1">
+    <section class="page-header page-header-row">
+      <div>
+        <h1>My Comics</h1>
+        <p>Everything you've published. Edit details, add chapters, or fix pages.</p>
+      </div>
+      <a href="upload.html" class="btn">+ New series</a>
+    </section>
+
+    <div id="dashboard-root">
+      <div class="skeleton-block" style="height: 140px; border-radius: 16px;"></div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+  <script src="supabase.js"></script>
+  <script src="auth-nav.js"></script>
+  <script src="creator.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

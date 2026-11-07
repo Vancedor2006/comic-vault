@@ -4,27 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Publish - ComicVault</title>
+  <meta name="description" content="Publish a new webcomic series or add a chapter on ComicVault.">
+  <meta name="theme-color" content="#0e0e11">
+  <link rel="icon" href="assets/icon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ComicVault">
+  <meta property="og:site_name" content="ComicVault">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Publish on ComicVault">
+  <meta property="og:description" content="Publish your webcomic and choose exactly how readers see it: vertical scroll, manga or western page-turns.">
+  <meta property="og:image" content="https://vancedor2006.github.io/comic-vault/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <script src="common.js"></script>
 
-  <!-- ===== Shared header ===== -->
-  <header class="site-header">
-    <div class="container nav-wrapper">
-      <a href="index.html" class="logo"><span class="logo-mark">CV</span>ComicVault</a>
-      <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
-      <nav class="site-nav" id="site-nav">
-        <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="browse.html">Browse</a></li>
-          <li><a href="upload.html">Publish</a></li>
-          <li><div id="nav-user-container"></div></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main class="container upload-page">
+  <main id="main" class="container creator-page" tabindex="-1">
 
     <section class="page-header">
       <h1>Publish</h1>
@@ -34,7 +35,6 @@
     <!-- Upload form (handled by upload.js) -->
     <form id="upload-form" class="upload-form" novalidate>
 
-      <!-- What are we publishing? -->
       <div class="mode-switch" role="radiogroup" aria-label="What are you publishing?">
         <label><input type="radio" name="upload-mode" value="new" checked><span>New series</span></label>
         <label><input type="radio" name="upload-mode" value="existing" id="mode-existing"><span>New chapter</span></label>
@@ -69,35 +69,35 @@
 
           <div class="form-group">
             <label for="reading-mode">Reading direction *</label>
-            <select id="reading-mode" class="select-field">
+            <select id="reading-mode" class="select-field" aria-describedby="reading-mode-hint">
               <option value="infinite" selected>Vertical scroll (webtoon)</option>
               <option value="ltr">Left to right (western)</option>
               <option value="rtl">Right to left (manga)</option>
             </select>
-            <span class="form-hint">Readers will always see your comic this way.</span>
+            <span class="form-hint" id="reading-mode-hint">Readers will always see your comic this way.</span>
           </div>
         </div>
 
         <div class="form-group">
           <label for="cover-file">Cover image *</label>
-          <div class="file-dropzone" id="cover-dropzone">
-            <input type="file" id="cover-file" accept="image/jpeg,image/png,image/webp,image/gif" class="file-input">
+          <div class="file-dropzone">
+            <input type="file" id="cover-file" accept="image/jpeg,image/png,image/webp,image/gif" class="file-input" aria-describedby="cover-hint">
             <div class="dropzone-text">
               <span class="upload-icon" aria-hidden="true">&#128444;</span>
               <p>Click or drag your cover here</p>
-              <small>Portrait works best (e.g. 600 &times; 900px) &middot; max 10 MB</small>
+              <small id="cover-hint">Portrait works best (e.g. 600 &times; 900px) &middot; resized automatically</small>
             </div>
           </div>
-          <div id="cover-preview" class="file-preview-container"></div>
+          <div id="cover-preview"></div>
         </div>
       </fieldset>
 
       <!-- B) Existing series picker -->
-      <fieldset class="form-section hidden" id="existing-section">
+      <fieldset class="form-section" id="existing-section" hidden>
         <legend>Choose series</legend>
         <div class="form-group">
           <label for="existing-comic">Your series *</label>
-          <select id="existing-comic" class="select-field">
+          <select id="existing-comic" class="select-field" aria-describedby="existing-hint">
             <option value="">Loading your comics...</option>
           </select>
           <span class="form-hint" id="existing-hint"></span>
@@ -111,7 +111,7 @@
         <div class="form-row">
           <div class="form-group short-input">
             <label for="chapter-number">Chapter # *</label>
-            <input type="number" id="chapter-number" class="input-field" value="1" min="1">
+            <input type="number" id="chapter-number" class="input-field" value="1" min="1" inputmode="numeric">
           </div>
 
           <div class="form-group">
@@ -122,45 +122,35 @@
 
         <div class="form-group">
           <label for="pages-files">Pages *</label>
-          <div class="file-dropzone" id="pages-dropzone">
-            <input type="file" id="pages-files" accept="image/jpeg,image/png,image/webp,image/gif" multiple class="file-input">
+          <div class="file-dropzone">
+            <input type="file" id="pages-files" accept="image/jpeg,image/png,image/webp,image/gif,.zip,application/zip" multiple class="file-input" aria-describedby="pages-hint">
             <div class="dropzone-text">
               <span class="upload-icon" aria-hidden="true">&#128193;</span>
-              <p>Click or drag all the chapter's pages here</p>
-              <small>Sorted by filename (01.png, 02.png...) &middot; reorder below &middot; max 10 MB each</small>
+              <p>Click or drag the chapter's pages here</p>
+              <small id="pages-hint">Images or a ZIP file &middot; sorted by filename (01.png, 02.png…) &middot; reorder below</small>
             </div>
           </div>
-          <div id="pages-preview-list" class="file-list-preview">
-            <p class="empty-list-note">No pages selected yet.</p>
-          </div>
+          <div id="pages-preview-list" class="file-list-preview" aria-live="polite"></div>
         </div>
       </fieldset>
 
       <!-- Feedback -->
-      <div id="upload-status" class="upload-status hidden" role="status" aria-live="polite"></div>
-      <div id="upload-progress" class="upload-progress hidden">
-        <div id="upload-progress-bar" class="upload-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+      <div id="upload-status" class="upload-status" role="status" aria-live="polite" hidden></div>
+      <div id="upload-progress" class="upload-progress" hidden>
+        <div id="upload-progress-bar" class="upload-progress-bar" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
       </div>
 
       <div class="form-actions">
         <button type="reset" class="btn btn-ghost">Clear form</button>
         <button type="submit" id="submit-btn" class="btn btn-large">Publish series</button>
       </div>
-
     </form>
   </main>
 
-  <!-- ===== Shared footer ===== -->
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>&copy; 2026 ComicVault. Built for webcomic creators and readers.</p>
-      <nav><a href="browse.html">Browse</a><a href="upload.html">Publish</a></nav>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
   <script src="supabase.js"></script>
   <script src="auth-nav.js"></script>
+  <script src="creator.js"></script>
   <script src="upload.js"></script>
 </body>
 </html>

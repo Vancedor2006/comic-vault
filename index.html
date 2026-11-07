@@ -4,38 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ComicVault - Read Webcomics</title>
-  <meta name="description" content="Read webcomics the way their creators intended: vertical scroll, manga, or western page-turns.">
+  <meta name="description" content="Read webcomics the way their creators intended: vertical scroll, manga (right to left) or western page-turns.">
+  <meta name="theme-color" content="#0e0e11">
+  <link rel="icon" href="assets/icon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ComicVault">
+  <meta property="og:site_name" content="ComicVault">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ComicVault - Read Webcomics">
+  <meta property="og:description" content="Read webcomics the way their creators intended: vertical scroll, manga or western page-turns.">
+  <meta property="og:image" content="https://vancedor2006.github.io/comic-vault/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <script src="common.js"></script>
 
-  <!-- ===== Shared header ===== -->
-  <header class="site-header">
-    <div class="container nav-wrapper">
-      <a href="index.html" class="logo"><span class="logo-mark">CV</span>ComicVault</a>
-      <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
-      <nav class="site-nav" id="site-nav">
-        <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="browse.html">Browse</a></li>
-          <li><a href="upload.html">Publish</a></li>
-          <li><div id="nav-user-container"></div></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <main id="main" class="container" tabindex="-1">
+    <h1 class="visually-hidden">ComicVault: read webcomics</h1>
 
-  <main class="container">
-
-    <!-- Search (sends to browse.html?q=...) -->
-    <form id="home-search-form" class="home-search" role="search">
-      <input type="search" id="home-search-input" class="input-field" placeholder="Search comics by title..." aria-label="Search comics">
-      <button type="submit" class="btn">Search</button>
-    </form>
-
-    <!-- Featured comic (filled by index.js) -->
-    <section class="hero">
-      <div class="hero-card" id="hero-card">
+    <!-- Featured carousel (index.js) -->
+    <section class="hero" id="featured" aria-label="Featured comics">
+      <div class="hero-card is-active" aria-hidden="true">
         <div class="hero-text">
           <div class="skeleton-line" style="width: 90px;"></div>
           <div class="skeleton-line" style="width: 50%; height: 2.4rem;"></div>
@@ -45,26 +40,24 @@
       </div>
     </section>
 
-    <!-- Latest chapter updates (filled by index.js) -->
-    <section class="updates">
+    <!-- Continue reading (from this browser's saved progress) -->
+    <section class="section" id="continue-section" aria-labelledby="continue-heading" hidden></section>
+
+    <!-- Latest chapter updates -->
+    <section class="section" aria-labelledby="latest-heading">
       <div class="section-heading-row">
-        <h2 class="section-heading">Latest Updates</h2>
+        <h2 class="section-heading" id="latest-heading">Latest updates</h2>
         <a href="browse.html" class="see-all">Browse all &rarr;</a>
       </div>
       <div class="comic-grid" id="latest-grid"></div>
     </section>
 
+    <!-- New series + one row per genre -->
+    <div id="new-series"></div>
+    <div id="genre-rows"></div>
   </main>
 
-  <!-- ===== Shared footer ===== -->
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>&copy; 2026 ComicVault. Built for webcomic creators and readers.</p>
-      <nav><a href="browse.html">Browse</a><a href="upload.html">Publish</a></nav>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
   <script src="supabase.js"></script>
   <script src="auth-nav.js"></script>
   <script src="index.js"></script>

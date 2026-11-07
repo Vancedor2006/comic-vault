@@ -4,27 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Log In - ComicVault</title>
+  <meta name="description" content="Log in to ComicVault to publish and manage your webcomics.">
+  <meta name="theme-color" content="#0e0e11">
+  <link rel="icon" href="assets/icon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ComicVault">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <script src="common.js"></script>
 
-  <!-- ===== Shared header ===== -->
-  <header class="site-header">
-    <div class="container nav-wrapper">
-      <a href="index.html" class="logo"><span class="logo-mark">CV</span>ComicVault</a>
-      <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
-      <nav class="site-nav" id="site-nav">
-        <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="browse.html">Browse</a></li>
-          <li><a href="upload.html">Publish</a></li>
-          <li><div id="nav-user-container"></div></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main class="auth-container">
+  <main id="main" class="auth-container" tabindex="-1">
     <div class="auth-card">
 
       <nav class="auth-tabs" aria-label="Account">
@@ -32,9 +25,8 @@
         <a href="signup.html" class="tab-btn" data-auth-link>Sign Up</a>
       </nav>
 
-      <!-- Log in -->
       <form id="login-form" class="auth-form">
-        <h2>Welcome back</h2>
+        <h1>Welcome back</h1>
         <p class="auth-subtitle">Log in to publish and manage your comics.</p>
 
         <div class="form-group">
@@ -46,6 +38,7 @@
           <label for="login-password">Password</label>
           <input type="password" id="login-password" class="input-field" placeholder="••••••••" autocomplete="current-password" required>
         </div>
+        <div class="auth-links-row"><a href="reset-password.html">Forgot password?</a></div>
 
         <button type="submit" id="login-btn" class="btn btn-full btn-large">Log In</button>
         <p id="login-message" class="auth-message" role="status"></p>
@@ -55,15 +48,7 @@
     </div>
   </main>
 
-  <!-- ===== Shared footer ===== -->
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>&copy; 2026 ComicVault. Built for webcomic creators and readers.</p>
-      <nav><a href="browse.html">Browse</a><a href="upload.html">Publish</a></nav>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
   <script src="supabase.js"></script>
   <script src="auth-nav.js"></script>
   <script src="login.js"></script>

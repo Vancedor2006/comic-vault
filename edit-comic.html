@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit series - ComicVault</title>
+  <meta name="description" content="Edit your series on ComicVault.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0e0e11">
+  <link rel="icon" href="assets/icon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ComicVault">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <script src="common.js"></script>
+
+  <main id="main" class="container creator-page" tabindex="-1">
+    <section class="page-header">
+      <a href="dashboard.html" class="back-link">&larr; My Comics</a>
+      <h1>Edit series</h1>
+      <p id="edit-subtitle">Loading…</p>
+    </section>
+
+    <div id="edit-root">
+      <form id="edit-form" class="upload-form" novalidate hidden>
+        <fieldset class="form-section">
+          <legend>Series details</legend>
+
+          <div class="form-group">
+            <label for="series-title">Comic title *</label>
+            <input type="text" id="series-title" class="input-field" maxlength="100" aria-describedby="title-hint">
+            <span class="form-hint" id="title-hint">The web address stays the same if you rename it, so links and bookmarks keep working.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="series-synopsis">Synopsis</label>
+            <textarea id="series-synopsis" class="input-field textarea-field" rows="5" maxlength="2000"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="series-genre">Genre *</label>
+              <select id="series-genre" class="select-field">
+                <option value="action">Action</option>
+                <option value="fantasy">Fantasy</option>
+                <option value="romance">Romance</option>
+                <option value="scifi">Sci-Fi</option>
+                <option value="slice-of-life">Slice of Life</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="reading-mode">Reading direction *</label>
+              <select id="reading-mode" class="select-field" aria-describedby="mode-hint">
+                <option value="infinite">Vertical scroll (webtoon)</option>
+                <option value="ltr">Left to right (western)</option>
+                <option value="rtl">Right to left (manga)</option>
+              </select>
+              <span class="form-hint" id="mode-hint">Changes how every chapter is read.</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <span class="field-label" id="cover-label">Cover image</span>
+            <div id="current-cover"></div>
+            <div class="file-dropzone">
+              <input type="file" id="cover-file" accept="image/jpeg,image/png,image/webp,image/gif" class="file-input" aria-labelledby="cover-label cover-drop-text">
+              <div class="dropzone-text">
+                <span class="upload-icon" aria-hidden="true">&#128444;</span>
+                <p id="cover-drop-text">Replace the cover: click or drag an image here</p>
+                <small>Leave empty to keep the current cover</small>
+              </div>
+            </div>
+            <div id="new-cover"></div>
+          </div>
+        </fieldset>
+
+        <div id="edit-status" class="upload-status" role="status" aria-live="polite" hidden></div>
+        <div id="edit-progress" class="upload-progress" hidden>
+          <div id="edit-progress-bar" class="upload-progress-bar" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+        </div>
+
+        <div class="form-actions">
+          <a href="dashboard.html" class="btn btn-ghost">Cancel</a>
+          <button type="submit" id="save-btn" class="btn btn-large">Save changes</button>
+        </div>
+
+        <fieldset class="form-section danger-zone">
+          <legend>Delete series</legend>
+          <p id="delete-summary">This permanently deletes the series, all its chapters and every uploaded page. It can't be undone.</p>
+          <div class="form-group">
+            <label for="delete-confirm">Type the title <strong id="delete-title"></strong> to confirm</label>
+            <input type="text" id="delete-confirm" class="input-field" autocomplete="off" spellcheck="false">
+          </div>
+          <button type="button" id="delete-btn" class="btn btn-danger" disabled>Delete this series</button>
+        </fieldset>
+      </form>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+  <script src="supabase.js"></script>
+  <script src="auth-nav.js"></script>
+  <script src="creator.js"></script>
+  <script src="edit-comic.js"></script>
+</body>
+</html>

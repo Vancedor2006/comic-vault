@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit chapter - ComicVault</title>
+  <meta name="description" content="Edit a chapter on ComicVault.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0e0e11">
+  <link rel="icon" href="assets/icon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ComicVault">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <script src="common.js"></script>
+
+  <main id="main" class="container creator-page" tabindex="-1">
+    <section class="page-header">
+      <a href="dashboard.html" class="back-link">&larr; My Comics</a>
+      <h1>Edit chapter</h1>
+      <p id="edit-subtitle">Loading…</p>
+    </section>
+
+    <div id="edit-root">
+      <form id="edit-form" class="upload-form" novalidate hidden>
+        <fieldset class="form-section">
+          <legend>Chapter details</legend>
+          <div class="form-row">
+            <div class="form-group short-input">
+              <label for="chapter-number">Chapter # *</label>
+              <input type="number" id="chapter-number" class="input-field" min="1" inputmode="numeric">
+            </div>
+            <div class="form-group">
+              <label for="chapter-title">Chapter title (optional)</label>
+              <input type="text" id="chapter-title" class="input-field" maxlength="100">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-section">
+          <legend>Pages</legend>
+          <p class="form-hint" style="margin-bottom: 1rem;">Reorder or remove pages, or add new ones. Nothing changes until you click <strong>Save changes</strong>.</p>
+          <div class="file-dropzone">
+            <input type="file" id="pages-files" accept="image/jpeg,image/png,image/webp,image/gif,.zip,application/zip" multiple class="file-input" aria-label="Add pages (images or a ZIP file)">
+            <div class="dropzone-text">
+              <span class="upload-icon" aria-hidden="true">&#128193;</span>
+              <p>Add pages: click or drag images (or a ZIP) here</p>
+              <small>New pages are added at the end; move them where you want below</small>
+            </div>
+          </div>
+          <div id="pages-list" class="file-list-preview" aria-live="polite"></div>
+        </fieldset>
+
+        <div id="edit-status" class="upload-status" role="status" aria-live="polite" hidden></div>
+        <div id="edit-progress" class="upload-progress" hidden>
+          <div id="edit-progress-bar" class="upload-progress-bar" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+        </div>
+
+        <div class="form-actions">
+          <a href="dashboard.html" class="btn btn-ghost">Cancel</a>
+          <button type="submit" id="save-btn" class="btn btn-large">Save changes</button>
+        </div>
+
+        <fieldset class="form-section danger-zone">
+          <legend>Delete chapter</legend>
+          <p>This permanently deletes the chapter and all of its pages. It can't be undone.</p>
+          <button type="button" id="delete-btn" class="btn btn-danger">Delete this chapter</button>
+        </fieldset>
+      </form>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+  <script src="supabase.js"></script>
+  <script src="auth-nav.js"></script>
+  <script src="creator.js"></script>
+  <script src="edit-chapter.js"></script>
+</body>
+</html>

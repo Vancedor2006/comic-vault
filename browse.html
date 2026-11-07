@@ -4,87 +4,92 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Browse Webcomics - ComicVault</title>
+  <meta name="description" content="Browse and search webcomics on ComicVault by title, author, genre and reading direction.">
+  <meta name="theme-color" content="#0e0e11">
+  <link rel="icon" href="assets/icon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ComicVault">
+  <meta property="og:site_name" content="ComicVault">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Browse Webcomics - ComicVault">
+  <meta property="og:description" content="Find your next webcomic by genre, author or reading direction.">
+  <meta property="og:image" content="https://vancedor2006.github.io/comic-vault/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <script src="common.js"></script>
 
-  <!-- ===== Shared header ===== -->
-  <header class="site-header">
-    <div class="container nav-wrapper">
-      <a href="index.html" class="logo"><span class="logo-mark">CV</span>ComicVault</a>
-      <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
-      <nav class="site-nav" id="site-nav">
-        <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="browse.html">Browse</a></li>
-          <li><a href="upload.html">Publish</a></li>
-          <li><div id="nav-user-container"></div></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main class="container">
+  <main id="main" class="container" tabindex="-1">
     <section class="page-header">
-      <h1>Browse Comics</h1>
-      <p>Search by title, or filter by genre and reading direction.</p>
+      <h1>Browse comics</h1>
+      <p>Search by title, author or story, then narrow it down by genre and reading direction.</p>
     </section>
 
-    <!-- Search & filters (handled by browse.js) -->
-    <section class="filter-section">
-      <form class="filter-form" role="search" onsubmit="event.preventDefault();">
-        <div class="filter-group filter-group-search">
-          <input type="search" id="search-input" placeholder="Search comics by title..." class="input-field" aria-label="Search comics by title">
+    <!-- Search & filters (browse.js) -->
+    <section class="filter-section" aria-label="Search and filters">
+      <form class="filter-bar" role="search" id="filter-form">
+        <div class="filter-search">
+          <label for="search-input" class="visually-hidden">Search by title, author or story</label>
+          <span class="search-icon" data-icon="search"></span>
+          <input type="search" id="search-input" class="input-field" placeholder="Search titles, authors or stories…" autocomplete="off">
         </div>
 
-        <div class="filter-group">
-          <select id="genre-select" class="select-field" aria-label="Genre">
-            <option value="">All Genres</option>
-            <option value="action">Action</option>
-            <option value="fantasy">Fantasy</option>
-            <option value="romance">Romance</option>
-            <option value="scifi">Sci-Fi</option>
-            <option value="slice-of-life">Slice of Life</option>
+        <button type="button" class="btn btn-secondary filters-toggle" id="filters-toggle" aria-expanded="false" aria-controls="filter-panel">
+          <span data-icon="filter"></span> Filters <span class="filter-count" id="filter-count" hidden></span>
+        </button>
+
+        <div class="filter-panel" id="filter-panel">
+          <label for="format-select" class="visually-hidden">Reading direction</label>
+          <select id="format-select" class="select-field">
+            <option value="">All reading directions</option>
+            <option value="infinite">Vertical scroll</option>
+            <option value="rtl">Manga (right to left)</option>
+            <option value="ltr">Western (left to right)</option>
+          </select>
+
+          <label for="sort-select" class="visually-hidden">Sort order</label>
+          <select id="sort-select" class="select-field">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="az">Title A–Z</option>
+            <option value="za">Title Z–A</option>
           </select>
         </div>
 
-        <div class="filter-group">
-          <select id="format-select" class="select-field" aria-label="Reading format">
-            <option value="">All Formats</option>
-            <option value="infinite">Vertical Scroll</option>
-            <option value="rtl">Manga (Right to Left)</option>
-            <option value="ltr">Western (Left to Right)</option>
-          </select>
-        </div>
-
-        <div class="filter-group">
-          <select id="sort-select" class="select-field" aria-label="Sort order">
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-            <option value="az">Title A-Z</option>
-            <option value="za">Title Z-A</option>
-          </select>
+        <div class="view-toggle" role="group" aria-label="Layout">
+          <button type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view"><span data-icon="grid"></span></button>
+          <button type="button" data-view="list" aria-pressed="false" aria-label="List view" title="List view"><span data-icon="list"></span></button>
         </div>
       </form>
-      <p id="results-info" class="results-info" aria-live="polite"></p>
+
+      <div class="chip-row" id="genre-chips" role="group" aria-label="Genre"></div>
+
+      <div class="results-row">
+        <p id="results-info" class="results-info" aria-live="polite"></p>
+        <div class="results-actions">
+          <button type="button" class="btn btn-ghost btn-sm" id="clear-filters" hidden>Clear filters</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="random-btn"><span data-icon="shuffle"></span> Surprise me</button>
+        </div>
+      </div>
     </section>
 
-    <!-- Comic grid (filled by browse.js) -->
-    <section class="comic-grid" id="browse-grid"></section>
+    <!-- Results (browse.js) -->
+    <section class="comic-grid" id="browse-grid" aria-label="Comics"></section>
 
-    <!-- Pagination (filled by browse.js) -->
-    <nav class="pagination" id="pagination" aria-label="Page navigation"></nav>
+    <nav class="pagination" id="pagination" aria-label="Pages of results"></nav>
+    <div class="load-more-wrap" id="load-more" hidden>
+      <span id="load-more-info"></span>
+      <button type="button" class="btn btn-secondary" id="load-more-btn">Load more</button>
+    </div>
   </main>
 
-  <!-- ===== Shared footer ===== -->
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>&copy; 2026 ComicVault. Built for webcomic creators and readers.</p>
-      <nav><a href="browse.html">Browse</a><a href="upload.html">Publish</a></nav>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
   <script src="supabase.js"></script>
   <script src="auth-nav.js"></script>
   <script src="browse.js"></script>

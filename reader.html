@@ -4,83 +4,145 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reader - ComicVault</title>
+  <meta name="description" content="Read webcomics on ComicVault, in the reading direction the creator chose.">
+  <meta name="theme-color" content="#0e0e11">
+  <link rel="icon" href="assets/icon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ComicVault">
+  <meta property="og:site_name" content="ComicVault">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Read on ComicVault">
+  <meta property="og:description" content="Read webcomics the way their creators intended.">
+  <meta property="og:image" content="https://vancedor2006.github.io/comic-vault/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="reader-body">
+<body class="reader-body" data-footer="none">
+  <script src="common.js"></script>
 
-  <!-- ===== Shared header ===== -->
-  <header class="site-header">
-    <div class="container nav-wrapper">
-      <a href="index.html" class="logo"><span class="logo-mark">CV</span>ComicVault</a>
-      <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
-      <nav class="site-nav" id="site-nav">
-        <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="browse.html">Browse</a></li>
-          <li><a href="upload.html">Publish</a></li>
-          <li><div id="nav-user-container"></div></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <div class="reader-progress" aria-hidden="true"><div class="reader-progress-bar" id="reader-progress-bar"></div></div>
 
-  <main class="reader-container" id="reader-root">
+  <main id="main" class="reader-container" tabindex="-1">
 
-    <!-- Toolbar -->
-    <section class="reader-toolbar">
+    <section class="reader-toolbar" aria-label="Chapter">
       <div class="comic-title-info">
         <a href="browse.html" class="back-link" id="back-link">&larr; Back to series</a>
-        <h1><a href="#" id="comic-title">Loading...</a></h1>
+        <h1><a href="browse.html" id="comic-title">Loading…</a></h1>
         <span class="chapter-subtitle" id="chapter-title">&nbsp;</span>
       </div>
-
       <div class="toolbar-controls">
         <label for="chapter-select" class="visually-hidden">Jump to chapter</label>
         <select id="chapter-select" class="select-field" disabled></select>
-        <span id="creator-intent-badge" class="badge">Loading...</span>
+        <span id="mode-badge" class="badge">Loading…</span>
+        <button type="button" class="icon-btn" id="settings-btn" data-icon="settings" aria-label="Reader settings" aria-haspopup="dialog"></button>
+        <button type="button" class="icon-btn" id="fullscreen-btn" data-icon="expand" aria-label="Enter fullscreen" hidden></button>
       </div>
     </section>
 
-    <p class="reader-tip hidden" id="reader-tip">
-      Tip: use <kbd>&larr;</kbd> <kbd>&rarr;</kbd> or tap the sides of the page to turn pages.
-    </p>
+    <p class="reader-tip" id="reader-tip" hidden></p>
 
-    <!-- Comic display -->
-    <div id="reader-display" class="reader-display">
-      <div class="reader-loading skeleton-block" id="reader-loading"></div>
+    <div class="reader-display" id="reader-display">
+      <div class="reader-loading skeleton-block" id="reader-loading" aria-label="Loading pages"></div>
 
-      <!-- Vertical / webtoon mode -->
-      <div id="infinite-wrapper" class="infinite-wrapper hidden"></div>
+      <!-- Vertical (webtoon) mode -->
+      <div class="infinite-wrapper" id="infinite-wrapper" hidden></div>
 
       <!-- Single-page mode (LTR / RTL) -->
-      <div id="single-page-wrapper" class="single-page-wrapper hidden">
-        <button type="button" id="prev-page-btn" class="page-nav-overlay prev-overlay" aria-label="Previous page">&lsaquo;</button>
-        <img id="active-page-img" alt="" class="single-page">
-        <button type="button" id="next-page-btn" class="page-nav-overlay next-overlay" aria-label="Next page">&rsaquo;</button>
+      <div class="single-page-wrapper" id="single-page-wrapper" hidden>
+        <button type="button" class="page-nav-overlay prev-overlay" id="prev-page-btn" aria-label="Previous page">&lsaquo;</button>
+        <div class="page-stage" id="page-stage"></div>
+        <button type="button" class="page-nav-overlay next-overlay" id="next-page-btn" aria-label="Next page">&rsaquo;</button>
+        <div class="page-spinner" aria-hidden="true"></div>
       </div>
     </div>
 
-    <div id="page-counter" class="page-counter hidden">
-      Page <span id="current-page-num">1</span> of <span id="total-pages-num">1</span>
-    </div>
+    <p class="page-counter" id="page-counter" aria-live="polite" hidden></p>
 
-    <!-- End-of-chapter panel -->
-    <section id="chapter-end" class="chapter-end hidden">
-      <h2>End of chapter</h2>
+    <section class="chapter-end" id="chapter-end" aria-labelledby="chapter-end-title" hidden>
+      <h2 id="chapter-end-title">End of chapter</h2>
       <p id="chapter-end-text"></p>
-      <div id="chapter-end-actions"></div>
+      <div class="chapter-end-actions" id="chapter-end-actions"></div>
     </section>
 
-    <!-- Bottom nav -->
     <nav class="reader-bottom-nav" aria-label="Chapter navigation">
-      <a id="prev-chapter-btn" class="btn btn-secondary" aria-disabled="true">&laquo; Prev chapter</a>
+      <a id="prev-chapter-btn" class="btn btn-secondary" aria-disabled="true">&laquo; Previous chapter</a>
       <button type="button" id="scroll-top-btn" class="btn btn-ghost">Top &uarr;</button>
-      <a id="next-chapter-btn" class="btn btn-primary" aria-disabled="true">Next chapter &raquo;</a>
+      <a id="next-chapter-btn" class="btn" aria-disabled="true">Next chapter &raquo;</a>
     </nav>
-
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Phone-only bottom bar -->
+  <nav class="reader-mobile-bar" aria-label="Reader controls">
+    <a class="icon-btn" id="m-prev-chapter" data-icon="chevronLeft" aria-label="Previous chapter" aria-disabled="true"></a>
+    <label for="chapter-select-mobile" class="visually-hidden">Jump to chapter</label>
+    <select id="chapter-select-mobile" class="select-field" disabled></select>
+    <button type="button" class="icon-btn" id="m-settings-btn" data-icon="settings" aria-label="Reader settings" aria-haspopup="dialog"></button>
+    <a class="icon-btn" id="m-next-chapter" data-icon="chevronRight" aria-label="Next chapter" aria-disabled="true"></a>
+  </nav>
+
+  <!-- Reader settings -->
+  <dialog class="settings-dialog" id="reader-settings" aria-labelledby="settings-title">
+    <form method="dialog" class="settings-form" id="settings-form">
+      <div class="settings-head">
+        <h2 id="settings-title">Reader settings</h2>
+        <button type="submit" class="icon-btn" data-icon="close" aria-label="Close settings"></button>
+      </div>
+
+      <fieldset class="setting" data-for="single">
+        <legend>Page size</legend>
+        <div class="pill-group">
+          <label class="radio-pill"><input type="radio" name="fit" value="height"><span>Fit to screen</span></label>
+          <label class="radio-pill"><input type="radio" name="fit" value="width"><span>Fit to width</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="setting" data-for="single">
+        <legend>Layout</legend>
+        <label class="check-row"><input type="checkbox" name="spread" aria-describedby="spread-hint"><span>Two-page spreads, like a printed book</span></label>
+        <p class="form-hint" id="spread-hint">Needs a wider screen (at least 1000px, landscape).</p>
+      </fieldset>
+
+      <fieldset class="setting" data-for="vertical">
+        <legend>Vertical scroll</legend>
+        <label class="check-row"><input type="checkbox" name="gaps"><span>Small gaps between pages</span></label>
+        <label class="check-row"><input type="checkbox" name="autoNext"><span>Load the next chapter automatically</span></label>
+      </fieldset>
+
+      <fieldset class="setting">
+        <legend>Background</legend>
+        <div class="pill-group">
+          <label class="radio-pill"><input type="radio" name="bg" value="auto"><span>Match theme</span></label>
+          <label class="radio-pill"><input type="radio" name="bg" value="black"><span>Black</span></label>
+          <label class="radio-pill"><input type="radio" name="bg" value="gray"><span>Grey</span></label>
+          <label class="radio-pill"><input type="radio" name="bg" value="white"><span>White</span></label>
+        </div>
+      </fieldset>
+
+      <div class="setting" id="fs-setting" hidden>
+        <h3>Screen</h3>
+        <div><button type="button" class="btn btn-secondary btn-sm" id="fs-dialog-btn">Enter fullscreen</button></div>
+      </div>
+
+      <div class="setting shortcuts">
+        <h3>Keyboard shortcuts</h3>
+        <dl class="shortcut-list">
+          <dt><kbd>&larr;</kbd> <kbd>&rarr;</kbd></dt><dd>Turn pages</dd>
+          <dt><kbd>[</kbd> <kbd>]</kbd></dt><dd>Previous / next chapter</dd>
+          <dt><kbd>Home</kbd> <kbd>End</kbd></dt><dd>First / last page</dd>
+          <dt><kbd>Z</kbd></dt><dd>Zoom in / out (or double-click the page)</dd>
+          <dt><kbd>F</kbd></dt><dd>Fullscreen</dd>
+          <dt><kbd>Esc</kbd></dt><dd>Zoom out / show hidden controls</dd>
+        </dl>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
   <script src="supabase.js"></script>
   <script src="auth-nav.js"></script>
   <script src="reader.js"></script>

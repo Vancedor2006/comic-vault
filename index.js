@@ -1,143 +1,306 @@
 /* ==========================================================================
-   ComicVault - Home Page
-   --------------------------------------------------------------------------
-   - Featured hero: the newest comic
-   - Latest Updates: most recently published chapters (one card per comic)
-   - Search box sends the user to browse.html?q=...
+   ComicVault - Home page
+   - Featured carousel (newest series that have chapters)
+   - Continue reading (saved in this browser)
+   - Latest chapter updates, new series, and one row per genre
    ========================================================================== */
 
-const LATEST_UPDATES_LIMIT = 12;
-
-function escapeHtml(str) {
-  return String(str ?? "").replace(/[&<>"']/g, (c) =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-}
-
-function readerUrl(slug, chapter) {
-  return `reader.html?comic=${encodeURIComponent(slug)}&chapter=${chapter}`;
-}
-
-function timeAgo(dateString) {
-  const seconds = Math.floor((Date.now() - new Date(dateString).getTime()) / 1000);
-  const units = [
-    ["year", 31536000], ["month", 2592000], ["week", 604800],
-    ["day", 86400], ["hour", 3600], ["minute", 60],
-  ];
-  for (const [name, secs] of units) {
-    const n = Math.floor(seconds / secs);
-    if (n >= 1) return `${n} ${name}${n > 1 ? "s" : ""} ago`;
-  }
-  return "just now";
-}
+const COMIC_FIELDS =
+  "id, slug, title, synopsis, genre, reading_mode, cover_url, created_at, profiles(username), chapters(chapter_number, created_at)";
+const ROTATE_MS = 7000;
 
 document.addEventListener("DOMContentLoaded", () => {
   const db = window.supabaseClient;
+  if (!db) return; // no connection: supabase.js shows a message
+  const esc = CV.escapeHtml;
 
-  const hero = document.getElementById("hero-card");
-  const updatesGrid = document.getElementById("latest-grid");
-  const searchForm = document.getElementById("home-search-form");
-  const searchInput = document.getElementById("home-search-input");
+  const featuredEl = document.getElementById("featured");
+  const continueEl = document.getElementById("continue-section");
+  const latestGrid = document.getElementById("latest-grid");
+  const newSeriesEl = document.getElementById("new-series");
+  const genreRowsEl = document.getElementById("genre-rows");
 
-  // ---- Search -> Browse ---------------------------------------------------
-  searchForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const q = searchInput.value.trim();
-    window.location.href = q ? `browse.html?q=${encodeURIComponent(q)}` : "browse.html";
-  });
-
-  // ---- Featured hero ------------------------------------------------------
-  async function loadFeatured() {
-    const { data, error } = await db
-      .from("comics")
-      .select("slug, title, synopsis, cover_url, profiles(username), chapters(chapter_number)")
-      .order("created_at", { ascending: false })
-      .limit(1);
-
-    if (error || !data || !data.length) {
-      hero.innerHTML = `
-        <div class="hero-text">
-          <h1 class="hero-title">Welcome to ComicVault</h1>
-          <p class="hero-description">Read webcomics the way their creators intended. No comics have been published yet.</p>
-          <a href="upload.html" class="btn">Publish the first one</a>
-        </div>`;
-      if (error) console.error("Featured comic error:", error);
+  // ---- Continue reading ---------------------------------------------------
+  function renderContinue() {
+    const entries = CV.progress.list().slice(0, 12);
+    if (!entries.length) {
+      continueEl.hidden = true;
+      continueEl.innerHTML = "";
       return;
     }
+    const cards = entries
+      .map((e) => {
+        const label = e.done
+          ? "Caught up"
+          : e.upNext
+            ? `Up next: Ch. ${e.chapter}`
+            : `Ch. ${e.chapter}${e.page > 1 ? ` · Page ${e.page}` : ""}`;
+        const href = e.done ? CV.url.series(e.slug) : CV.url.reader(e.slug, e.chapter, e.upNext ? 1 : e.page);
+        const progress = e.done ? 1 : e.upNext ? 0 : e.pageCount ? e.page / e.pageCount : undefined;
+        return CV.comicCard(
+          { slug: e.slug, title: e.title, cover_url: e.cover, reading_mode: e.mode },
+          {
+            href,
+            subtitle: label,
+            flag: false,
+            progress,
+            extra: `<button type="button" class="card-remove" data-remove="${esc(e.slug)}" aria-label="Remove ${esc(e.title)} from Continue reading" title="Remove">&times;</button>`,
+          }
+        );
+      })
+      .join("");
+    continueEl.hidden = false;
+    continueEl.innerHTML = `
+      <div class="section-heading-row"><h2 class="section-heading" id="continue-heading">Continue reading</h2></div>
+      ${CV.rowHtml(cards, "Continue reading")}`;
+    CV.initRows(continueEl);
+  }
 
-    const comic = data[0];
-    const nums = (comic.chapters || []).map((c) => c.chapter_number);
-    const firstChapter = nums.length ? Math.min(...nums) : 1;
-    const author = comic.profiles?.username;
+  continueEl.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-remove]");
+    if (!btn) return;
+    CV.progress.remove(btn.dataset.remove);
+    renderContinue();
+    const next = continueEl.querySelector(".card-remove");
+    if (next) next.focus();
+  });
 
-    const seriesUrl = `comic.html?comic=${encodeURIComponent(comic.slug)}`;
-    const cover = escapeHtml(comic.cover_url || "");
-
-    hero.innerHTML = `
-      ${cover ? `<div class="hero-backdrop" style="background-image: url('${cover}')"></div>` : ""}
-      ${cover ? `<a href="${seriesUrl}"><img src="${cover}" alt="" class="hero-cover"></a>` : ""}
-      <div class="hero-text">
-        <span class="hero-eyebrow">Featured</span>
-        <h1 class="hero-title">${escapeHtml(comic.title)}</h1>
-        ${author ? `<p class="comic-author">By ${escapeHtml(author)}</p>` : ""}
-        <p class="hero-description">${escapeHtml(comic.synopsis || "No synopsis yet.")}</p>
-        <div class="hero-actions">
-          ${nums.length ? `<a href="${readerUrl(comic.slug, firstChapter)}" class="btn btn-large">Start Reading</a>` : ""}
-          <a href="${seriesUrl}" class="btn btn-secondary btn-large">View Series</a>
+  // ---- Featured carousel --------------------------------------------------
+  function renderWelcome() {
+    featuredEl.innerHTML = `
+      <div class="hero-card is-active">
+        <div class="hero-text">
+          <span class="hero-eyebrow">Welcome</span>
+          <h2 class="hero-title">Welcome to ComicVault</h2>
+          <p class="hero-description">Read webcomics the way their creators intended. No comics have been published yet. Yours could be the first!</p>
+          <div class="hero-actions"><a href="upload.html" class="btn btn-large">Publish a comic</a></div>
         </div>
       </div>`;
   }
 
-  // ---- Latest updates -----------------------------------------------------
-  async function loadLatestUpdates() {
-    // Pull extra chapters so we still have enough after keeping one per comic
+  function slideHtml(c, i, n) {
+    const nums = (c.chapters || []).map((ch) => ch.chapter_number);
+    const first = nums.length ? Math.min(...nums) : null;
+    const saved = CV.progress.get(c.slug);
+    const mode = CV.mode(c.reading_mode);
+    const author = c.profiles && c.profiles.username;
+
+    let readHref = null;
+    let readLabel = "Start reading";
+    if (saved && !saved.done) {
+      readHref = CV.url.reader(c.slug, saved.chapter, saved.upNext ? 1 : saved.page);
+      readLabel = `Continue ch. ${saved.chapter}`;
+    } else if (first !== null) {
+      readHref = CV.url.reader(c.slug, first);
+    }
+
+    return `
+      <div class="hero-card${i === 0 ? " is-active" : ""}" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${n}: ${esc(c.title)}"${i === 0 ? "" : ' aria-hidden="true" inert'}>
+        ${c.cover_url ? `<div class="hero-backdrop" data-bg="${esc(c.cover_url)}"></div>` : ""}
+        ${c.cover_url ? `<a href="${CV.url.series(c.slug)}" class="hero-cover-link" tabindex="-1" aria-hidden="true"><img src="${esc(c.cover_url)}" alt="" class="hero-cover"></a>` : ""}
+        <div class="hero-text">
+          <span class="hero-eyebrow">Featured</span>
+          <h2 class="hero-title">${esc(c.title)}</h2>
+          ${author ? `<p class="comic-author">By ${esc(author)}</p>` : ""}
+          <div class="tags"><span class="badge ${mode.cls}">${mode.short}</span>${c.genre ? `<span class="tag">${esc(CV.genreLabel(c.genre))}</span>` : ""}</div>
+          <p class="hero-description">${esc(c.synopsis || "No synopsis yet.")}</p>
+          <div class="hero-actions">
+            ${readHref ? `<a href="${readHref}" class="btn btn-large">${esc(readLabel)}</a>` : ""}
+            <a href="${CV.url.series(c.slug)}" class="btn btn-secondary btn-large">View series</a>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function renderCarousel(list) {
+    if (!list.length) return renderWelcome();
+    const n = list.length;
+    featuredEl.innerHTML = `
+      <div class="carousel" role="region" aria-roledescription="carousel" aria-label="Featured comics">
+        <div class="carousel-track">${list.map((c, i) => slideHtml(c, i, n)).join("")}</div>
+        ${
+          n > 1
+            ? `<div class="carousel-controls">
+                <button type="button" class="icon-btn carousel-btn" data-dir="-1" aria-label="Previous featured comic">${CV.icons.chevronLeft}</button>
+                ${list.map((c, i) => `<button type="button" class="carousel-dot" data-go="${i}" aria-label="Show ${esc(c.title)}"${i === 0 ? ' aria-current="true"' : ""}></button>`).join("")}
+                <button type="button" class="icon-btn carousel-btn" data-dir="1" aria-label="Next featured comic">${CV.icons.chevronRight}</button>
+              </div>`
+            : ""
+        }
+      </div>`;
+
+    // Blurred backdrops are set from JS so odd characters in URLs can't break the CSS
+    featuredEl.querySelectorAll(".hero-backdrop").forEach((bg) => {
+      bg.style.backgroundImage = `url(${JSON.stringify(bg.dataset.bg)})`;
+    });
+    if (n < 2) return;
+
+    const slides = Array.from(featuredEl.querySelectorAll(".hero-card"));
+    const dots = Array.from(featuredEl.querySelectorAll(".carousel-dot"));
+    const carousel = featuredEl.querySelector(".carousel");
+    let current = 0;
+    let timer = null;
+    let stopped = CV.reducedMotion(); // no auto-rotation for reduced-motion users
+    let paused = false;
+
+    function show(i) {
+      current = (i + n) % n;
+      slides.forEach((s, idx) => {
+        const active = idx === current;
+        s.classList.toggle("is-active", active);
+        s.toggleAttribute("inert", !active);
+        if (active) s.removeAttribute("aria-hidden");
+        else s.setAttribute("aria-hidden", "true");
+      });
+      dots.forEach((d, idx) => (idx === current ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current")));
+    }
+
+    function schedule() {
+      clearInterval(timer);
+      if (!stopped) timer = setInterval(() => !paused && !document.hidden && show(current + 1), ROTATE_MS);
+    }
+
+    // Any manual control stops the automatic rotation
+    const userGo = (i) => {
+      stopped = true;
+      clearInterval(timer);
+      show(i);
+    };
+    featuredEl.querySelectorAll("[data-dir]").forEach((b) => b.addEventListener("click", () => userGo(current + Number(b.dataset.dir))));
+    dots.forEach((d) => d.addEventListener("click", () => userGo(Number(d.dataset.go))));
+
+    carousel.addEventListener("mouseenter", () => (paused = true));
+    carousel.addEventListener("mouseleave", () => (paused = false));
+    carousel.addEventListener("focusin", () => (paused = true));
+    carousel.addEventListener("focusout", () => (paused = false));
+
+    // Swipe between slides on touch screens
+    let startX = null;
+    let startY = null;
+    carousel.addEventListener(
+      "touchstart",
+      (e) => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      },
+      { passive: true }
+    );
+    carousel.addEventListener(
+      "touchend",
+      (e) => {
+        if (startX === null) return;
+        const dx = e.changedTouches[0].clientX - startX;
+        const dy = e.changedTouches[0].clientY - startY;
+        startX = null;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) userGo(current + (dx < 0 ? 1 : -1));
+      },
+      { passive: true }
+    );
+
+    schedule();
+  }
+
+  // ---- Data ---------------------------------------------------------------
+  async function loadNewest() {
+    const { data, error } = await db.from("comics").select(COMIC_FIELDS).order("created_at", { ascending: false }).limit(20);
+    if (error) {
+      console.error("Home: newest comics error:", error);
+      featuredEl.innerHTML = '<p class="grid-message">Couldn\'t load featured comics. Please try again later.</p>';
+      return;
+    }
+    if (!data.length) return renderWelcome();
+
+    const withChapters = data.filter((c) => (c.chapters || []).length);
+    const featured = withChapters.filter((c) => c.cover_url).slice(0, 5);
+    renderCarousel(featured.length ? featured : (withChapters.length ? withChapters : data).slice(0, 1));
+
+    newSeriesEl.innerHTML = `
+      <section class="section" aria-labelledby="new-heading">
+        <div class="section-heading-row">
+          <h2 class="section-heading" id="new-heading">New series</h2>
+          <div class="section-actions">
+            <button type="button" class="btn btn-secondary btn-sm" data-random>${CV.icons.shuffle} Surprise me</button>
+            <a href="browse.html" class="see-all">See all &rarr;</a>
+          </div>
+        </div>
+        ${CV.rowHtml(data.slice(0, 12).map((c) => CV.comicCard(c)).join(""), "New series")}
+      </section>`;
+    CV.initRows(newSeriesEl);
+    newSeriesEl.querySelector("[data-random]").addEventListener("click", (e) => CV.goToRandomComic(db, e.currentTarget));
+  }
+
+  async function loadLatest() {
+    latestGrid.innerHTML = CV.skeletonCards(6);
     const { data, error } = await db
       .from("chapters")
-      .select("chapter_number, title, created_at, comics(slug, title, cover_url)")
+      .select("chapter_number, created_at, comics(slug, title, cover_url, reading_mode, genre, created_at)")
       .order("created_at", { ascending: false })
-      .limit(LATEST_UPDATES_LIMIT * 4);
+      .limit(48);
 
     if (error) {
-      console.error("Latest updates error:", error);
-      updatesGrid.innerHTML = `<p class="grid-message">Couldn't load updates. Please try again later.</p>`;
+      console.error("Home: latest updates error:", error);
+      latestGrid.innerHTML = '<p class="grid-message">Couldn\'t load updates. Please try again later.</p>';
       return;
     }
 
+    // One card per comic: its newest chapter
     const seen = new Set();
     const updates = [];
     for (const ch of data || []) {
       if (!ch.comics || seen.has(ch.comics.slug)) continue;
       seen.add(ch.comics.slug);
       updates.push(ch);
-      if (updates.length === LATEST_UPDATES_LIMIT) break;
+      if (updates.length === 12) break;
     }
 
     if (!updates.length) {
-      updatesGrid.innerHTML = `<p class="grid-message">No chapters published yet.</p>`;
+      latestGrid.innerHTML = '<p class="grid-message">No chapters published yet.</p>';
       return;
     }
 
-    updatesGrid.innerHTML = updates.map((ch) => {
-      const c = ch.comics;
-      const cover = c.cover_url
-        ? `<img src="${escapeHtml(c.cover_url)}" alt="" class="comic-cover" loading="lazy">`
-        : `<div class="comic-cover cover-fallback">${escapeHtml(c.title)}</div>`;
-      return `
-        <article>
-          <a href="${readerUrl(c.slug, ch.chapter_number)}" class="comic-card">
-            ${cover}
-            <div class="comic-meta">
-              <h3 class="comic-title" title="${escapeHtml(c.title)}">${escapeHtml(c.title)}</h3>
-              <span class="comic-chapter">Ch. ${ch.chapter_number} · ${timeAgo(ch.created_at)}</span>
-            </div>
-          </a>
-        </article>`;
-    }).join("");
+    latestGrid.innerHTML = updates
+      .map((ch) =>
+        CV.comicCard(ch.comics, {
+          href: CV.url.reader(ch.comics.slug, ch.chapter_number),
+          subtitle: `Ch. ${ch.chapter_number} · ${CV.timeAgo(ch.created_at)}`,
+          flag: CV.isRecent(ch.created_at) ? (CV.isRecent(ch.comics.created_at) ? "new" : "updated") : false,
+        })
+      )
+      .join("");
   }
 
-  updatesGrid.innerHTML = Array.from({ length: 6 }, () =>
-    `<div class="comic-card skeleton" aria-hidden="true"><div class="comic-cover"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>`
-  ).join("");
+  async function loadGenres() {
+    const results = await Promise.all(
+      Object.keys(CV.GENRES).map(async (genre) => {
+        const { data, error } = await db
+          .from("comics")
+          .select(COMIC_FIELDS)
+          .eq("genre", genre)
+          .order("created_at", { ascending: false })
+          .limit(12);
+        if (error) console.error(`Home: ${genre} row error:`, error);
+        return { genre, comics: error ? [] : data || [] };
+      })
+    );
 
-  loadFeatured();
-  loadLatestUpdates();
+    genreRowsEl.innerHTML = results
+      .filter((r) => r.comics.length)
+      .map(
+        (r) => `
+        <section class="section" aria-labelledby="genre-${r.genre}-heading">
+          <div class="section-heading-row">
+            <h2 class="section-heading" id="genre-${r.genre}-heading">${esc(CV.genreLabel(r.genre))}</h2>
+            <a href="${CV.url.browse({ genre: r.genre })}" class="see-all">See all &rarr;</a>
+          </div>
+          ${CV.rowHtml(r.comics.map((c) => CV.comicCard(c)).join(""), CV.genreLabel(r.genre))}
+        </section>`
+      )
+      .join("");
+    CV.initRows(genreRowsEl);
+  }
+
+  renderContinue();
+  loadNewest();
+  loadLatest();
+  loadGenres();
 });

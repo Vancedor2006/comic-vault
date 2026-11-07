@@ -5,6 +5,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   const db = window.supabaseClient;
+  if (!db) return; // no connection: supabase.js shows a message
   const params = new URLSearchParams(window.location.search);
 
   // Only allow redirects to our own pages (e.g. "upload.html?comic=x")

@@ -4,27 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up - ComicVault</title>
+  <meta name="description" content="Create a free ComicVault account to publish your webcomics.">
+  <meta name="theme-color" content="#0e0e11">
+  <link rel="icon" href="assets/icon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ComicVault">
+  <meta property="og:site_name" content="ComicVault">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Join ComicVault">
+  <meta property="og:description" content="Create a free account and publish your webcomic, read the way you intended.">
+  <meta property="og:image" content="https://vancedor2006.github.io/comic-vault/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <script src="common.js"></script>
 
-  <!-- ===== Shared header ===== -->
-  <header class="site-header">
-    <div class="container nav-wrapper">
-      <a href="index.html" class="logo"><span class="logo-mark">CV</span>ComicVault</a>
-      <button type="button" class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">&#9776;</button>
-      <nav class="site-nav" id="site-nav">
-        <ul class="nav-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="browse.html">Browse</a></li>
-          <li><a href="upload.html">Publish</a></li>
-          <li><div id="nav-user-container"></div></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main class="auth-container">
+  <main id="main" class="auth-container" tabindex="-1">
     <div class="auth-card">
 
       <nav class="auth-tabs" aria-label="Account">
@@ -32,9 +33,8 @@
         <a href="signup.html" class="tab-btn active" data-auth-link aria-current="page">Sign Up</a>
       </nav>
 
-      <!-- Sign up -->
       <form id="signup-form" class="auth-form">
-        <h2>Create an account</h2>
+        <h1>Create an account</h1>
         <p class="auth-subtitle">Join ComicVault to publish your own series.</p>
 
         <div class="form-group">
@@ -55,19 +55,13 @@
         <button type="submit" id="signup-btn" class="btn btn-full btn-large">Create Account</button>
         <p id="signup-message" class="auth-message" role="status"></p>
         <p class="auth-switch">Already have an account? <a href="login.html" data-auth-link>Log in</a></p>
+        <p class="auth-switch">By signing up you agree to the <a href="terms.html">terms &amp; rules</a>.</p>
       </form>
+
     </div>
   </main>
 
-  <!-- ===== Shared footer ===== -->
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>&copy; 2026 ComicVault. Built for webcomic creators and readers.</p>
-      <nav><a href="browse.html">Browse</a><a href="upload.html">Publish</a></nav>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
   <script src="supabase.js"></script>
   <script src="auth-nav.js"></script>
   <script src="login.js"></script>

@@ -11,6 +11,15 @@ ROOT = Path(__file__).resolve().parent.parent  # project folder
 
 
 class NoCacheHandler(SimpleHTTPRequestHandler):
+    # Same file types GitHub Pages uses for these
+    extensions_map = {
+        **SimpleHTTPRequestHandler.extensions_map,
+        ".webmanifest": "application/manifest+json",
+        ".js": "text/javascript",
+        ".svg": "image/svg+xml",
+        ".webp": "image/webp",
+    }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
