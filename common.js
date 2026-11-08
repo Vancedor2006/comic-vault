@@ -18,7 +18,10 @@
   // before the Supabase library (loaded later) reads and removes it.
   CV.initialHash = window.location.hash;
   const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+  // Hosts like Cloudflare Pages drop ".html" from addresses (/comic instead of
+  // /comic.html), so normalise the page name back to "comic.html".
   CV.page = (window.location.pathname.split("/").pop() || "index.html").toLowerCase();
+  if (!CV.page.endsWith(".html")) CV.page += ".html";
   CV.here = CV.page + window.location.search; // used for "come back here after login"
 
   // App manifest ("Add to Home Screen"). Added here instead of in each page's

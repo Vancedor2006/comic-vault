@@ -2,7 +2,7 @@
   "name": "ComicVault",
   "short_name": "ComicVault",
   "description": "Read webcomics the way their creators intended.",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#101114",

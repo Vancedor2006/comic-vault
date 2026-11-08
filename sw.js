@@ -6,8 +6,8 @@
    Only registered on the live https site (see common.js).
    ========================================================================== */
 
-const CACHE = "comicvault-v2";
-const PRECACHE = ["./", "index.html", "css/styles.css", "common.js", "assets/icon-192.png"];
+const CACHE = "comicvault-v3";
+const PRECACHE = ["./", "css/styles.css", "common.js", "assets/icon-192.png"];
 
 const OFFLINE_HTML = `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"><title>Offline - ComicVault</title>
@@ -42,7 +42,9 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     fetch(request)
       .then((response) => {
-        if (response.ok && response.type === "basic") {
+        // Redirected responses (e.g. /page.html -> /page) must not be cached:
+        // browsers refuse to use them for page loads later
+        if (response.ok && response.type === "basic" && !response.redirected) {
           const copy = response.clone();
           caches.open(CACHE).then((cache) => cache.put(request, copy));
         }
