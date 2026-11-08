@@ -9,3 +9,5 @@ Thumbs.db
 
 # Ignore dependencies (if using Node later)
 node_modules/
+# Cloudflare wrangler local cache
+.wrangler/

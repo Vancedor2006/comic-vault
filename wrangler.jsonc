@@ -1,0 +1,11 @@
+// Cloudflare Workers settings for the ComicVault website.
+// The whole site is static files; Cloudflare serves them directly.
+{
+  "name": "comicvault",
+  "compatibility_date": "2025-10-01",
+  "assets": {
+    "directory": "./",
+    // Show our own 404.html for addresses that don't exist
+    "not_found_handling": "404-page"
+  }
+}
