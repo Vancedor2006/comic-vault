@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - Edit chapter (edit-chapter.html?comic=<slug>&chapter=<n>)
+   Comic-Vault - Edit chapter (edit-chapter.html?comic=<slug>&chapter=<n>)
    Change the number/title, reorder/remove/add pages, or delete the chapter.
    Saving: upload new pages -> update the chapter -> replace the page list
    (restoring the old list if that fails) -> delete removed images.
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function renderHeading() {
-    document.title = `Edit chapter ${chapter.chapter_number} - ${comic.title} - ComicVault`;
+    document.title = `Edit chapter ${chapter.chapter_number} - ${comic.title} - Comic-Vault`;
     subtitle.innerHTML = `<a href="${CV.url.series(comic.slug)}">${esc(comic.title)}</a> · <a href="${CV.url.reader(
       comic.slug,
       chapter.chapter_number

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - creator.js (used by the Publish and Edit pages)
+   Comic-Vault - creator.js (used by the Publish and Edit pages)
    --------------------------------------------------------------------------
    - Image checks + compression (resize to a sensible width, convert to WebP)
    - ZIP import (JSZip is downloaded only when someone adds a ZIP)

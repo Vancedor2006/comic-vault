@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - Header features that need Supabase
+   Comic-Vault - Header features that need Supabase
    - Account area (Log In / Sign Up, or avatar + My Comics + Log Out)
    - Live search suggestions in the header search box
    - Password-reset links that land on the wrong page

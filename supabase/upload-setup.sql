@@ -1,5 +1,5 @@
 -- ==========================================================================
--- ComicVault - Upload engine setup
+-- Comic-Vault - Upload engine setup
 -- Run once in Supabase Dashboard -> SQL Editor. Safe to re-run.
 --
 -- Matches the existing schema:

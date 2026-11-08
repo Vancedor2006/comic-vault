@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - My Comics (dashboard.html)
+   Comic-Vault - My Comics (dashboard.html)
    Lists the logged-in user's series with quick links to view, edit,
    add chapters and edit individual chapters.
    ========================================================================== */

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - Supabase Client Setup
+   Comic-Vault - Supabase Client Setup
    ========================================================================== */
 
 const SUPABASE_URL = "https://drdcypmwpfehwvgtwepy.supabase.co";
@@ -13,6 +13,6 @@ if (window.supabase && typeof window.supabase.createClient === "function") {
 } else {
   window.supabaseClient = null;
   document.addEventListener("DOMContentLoaded", () => {
-    if (window.CV) CV.toast("Couldn't connect to ComicVault. Check your internet connection, then refresh the page.", "error", 15000);
+    if (window.CV) CV.toast("Couldn't connect to Comic-Vault. Check your internet connection, then refresh the page.", "error", 15000);
   });
 }

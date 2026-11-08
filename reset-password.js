@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - Password reset (reset-password.html)
+   Comic-Vault - Password reset (reset-password.html)
    Step 1: send a reset email.
    Step 2: the email link brings the user back here (logged in for recovery)
            and they choose a new password.

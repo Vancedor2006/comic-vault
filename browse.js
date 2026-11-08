@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - Browse & search
+   Comic-Vault - Browse & search
    - Live search across titles, synopses and author names
    - Genre chips, reading-direction filter, sort, grid/list view
    - Numbered pages on bigger screens, "Load more" on phones

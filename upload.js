@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - Publish page
+   Comic-Vault - Publish page
    --------------------------------------------------------------------------
    "New series"  -> creates the comic (with cover) and its first chapter
    "New chapter" -> adds a chapter to one of your series

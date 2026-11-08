@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - Edit series (edit-comic.html?comic=<slug>)
+   Comic-Vault - Edit series (edit-comic.html?comic=<slug>)
    Change title, synopsis, genre, reading direction and cover, or delete
    the whole series (rows + stored images). Only the author can do this.
    ========================================================================== */
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let coverFile = null;
   let busy = false;
 
-  document.title = `Edit ${comic.title} - ComicVault`;
+  document.title = `Edit ${comic.title} - Comic-Vault`;
   subtitle.innerHTML = `Editing <a href="${CV.url.series(comic.slug)}">${esc(comic.title)}</a>`;
   titleInput.value = comic.title;
   synopsisInput.value = comic.synopsis || "";

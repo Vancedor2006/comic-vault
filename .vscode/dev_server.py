@@ -1,4 +1,4 @@
-"""Local dev server for ComicVault: http://localhost:8080
+"""Local dev server for Comic-Vault: http://localhost:8080
 
 Same as `python -m http.server 8080`, but tells the browser never to cache
 files, so edits to .js/.css/.html always show up on a normal refresh.

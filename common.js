@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - common.js
+   Comic-Vault - common.js
    --------------------------------------------------------------------------
    Loaded FIRST on every page, as the first thing inside <body>, before the
    Supabase scripts. It:
@@ -409,7 +409,7 @@
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
       <div class="container nav-wrapper">
-        <a href="index.html" class="logo" aria-label="ComicVault home"><span class="logo-mark">${LOGO}</span><span class="logo-text">ComicVault</span></a>
+        <a href="index.html" class="logo" aria-label="Comic-Vault home"><span class="logo-mark">${LOGO}</span><span class="logo-text">Comic-Vault</span></a>
         ${searchForm("bar")}
         <nav class="site-nav" id="site-nav" aria-label="Main">
           ${searchForm("panel")}
@@ -428,7 +428,7 @@
     <footer class="site-footer">
       <div class="container footer-inner">
         <div class="footer-brand">
-          <a href="index.html" class="logo"><span class="logo-mark">${LOGO}</span><span class="logo-text">ComicVault</span></a>
+          <a href="index.html" class="logo"><span class="logo-mark">${LOGO}</span><span class="logo-text">Comic-Vault</span></a>
           <p>Read webcomics the way their creators intended.</p>
         </div>
         <nav class="footer-links" aria-label="Footer">
@@ -438,7 +438,7 @@
           <a href="terms.html">Terms &amp; rules</a>
           <a href="about.html#contact">Contact</a>
         </nav>
-        <p class="footer-copy">&copy; ${new Date().getFullYear()} ComicVault. Built for webcomic creators and readers.</p>
+        <p class="footer-copy">&copy; ${new Date().getFullYear()} Comic-Vault. Built for webcomic creators and readers.</p>
       </div>
     </footer>`;
 

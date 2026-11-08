@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - Account pages (used by login.html AND signup.html)
+   Comic-Vault - Account pages (used by login.html AND signup.html)
    ?next=upload.html  -> where to go after logging in / signing up
    ========================================================================== */
 

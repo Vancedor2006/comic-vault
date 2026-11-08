@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - Series page (comic.html?comic=<slug>)
+   Comic-Vault - Series page (comic.html?comic=<slug>)
    Cover, synopsis, author, chapters, "continue reading", owner tools and
    "More like this".
    ========================================================================== */
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   if (!comic) return showError("Comic not found", "It may have been removed, or the link is wrong.");
 
-  document.title = `${comic.title} - ComicVault`;
+  document.title = `${comic.title} - Comic-Vault`;
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc && comic.synopsis) metaDesc.setAttribute("content", comic.synopsis.slice(0, 160));
 

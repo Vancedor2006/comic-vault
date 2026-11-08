@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - Reader
+   Comic-Vault - Reader
    reader.html?comic=<slug>&chapter=<number>[&page=<number>]
 
    - Always uses the creator's reading direction (vertical / LTR / RTL)
@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function updateChapterChrome() {
     const ch = chapters[chapterIndex];
-    document.title = `${comic.title} · Chapter ${ch.chapter_number} | ComicVault`;
+    document.title = `${comic.title} · Chapter ${ch.chapter_number} | Comic-Vault`;
     el.chapterTitle.textContent = chapterLabel(ch);
     el.chapterSelect.value = String(ch.chapter_number);
     el.mobileSelect.value = String(ch.chapter_number);

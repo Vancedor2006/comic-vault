@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - Creator profile (profile.html?id=<user id>)
+   Comic-Vault - Creator profile (profile.html?id=<user id>)
    Shows the creator's name, avatar, join date and all of their series.
    ========================================================================== */
 
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const name = profile.username || "Unnamed creator";
   const isMe = !!(sessionData && sessionData.session && sessionData.session.user.id === profile.id);
   const list = comics || [];
-  document.title = `${name} - ComicVault`;
+  document.title = `${name} - Comic-Vault`;
 
   root.innerHTML = `
     <section class="profile-header">

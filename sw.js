@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault service worker
+   Comic-Vault service worker
    Makes the site installable ("Add to Home Screen") and shows saved copies
    of pages when there's no internet. It ALWAYS tries the network first, so
    while online you never get out-of-date files.
@@ -10,7 +10,7 @@ const CACHE = "comicvault-v3";
 const PRECACHE = ["./", "css/styles.css", "common.js", "assets/icon-192.png"];
 
 const OFFLINE_HTML = `<!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"><title>Offline - ComicVault</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>Offline - Comic-Vault</title>
 <style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:2rem;text-align:center;
 font-family:system-ui,sans-serif;background:#101114;color:#f5f2ea}p{color:#bdb9af}h1{color:#ffd400}</style></head>
 <body><main><h1>You're offline</h1><p>Connect to the internet and try again.</p></main></body></html>`;

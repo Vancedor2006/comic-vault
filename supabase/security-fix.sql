@@ -1,5 +1,5 @@
 -- ==========================================================================
--- ComicVault - Security fix (run once in Supabase -> SQL Editor; safe to re-run)
+-- Comic-Vault - Security fix (run once in Supabase -> SQL Editor; safe to re-run)
 --
 -- Removes rules that let ANYONE, even without logging in, insert rows or
 -- upload files. Supabase allows an action if ANY rule allows it, so these

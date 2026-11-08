@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ComicVault - Home page
+   Comic-Vault - Home page
    - Featured carousel (newest series that have chapters)
    - Continue reading (saved in this browser)
    - Latest chapter updates, new series, and one row per genre
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="hero-card is-active">
         <div class="hero-text">
           <span class="hero-eyebrow">Welcome</span>
-          <h2 class="hero-title">Welcome to ComicVault</h2>
+          <h2 class="hero-title">Welcome to Comic-Vault</h2>
           <p class="hero-description">Read webcomics the way their creators intended. No comics have been published yet. Yours could be the first!</p>
           <div class="hero-actions"><a href="upload.html" class="btn btn-large">Publish a comic</a></div>
         </div>
