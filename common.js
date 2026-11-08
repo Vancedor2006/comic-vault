@@ -153,10 +153,10 @@
 
   const LOGO =
     '<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g transform="rotate(-6 32 32)">' +
-    '<rect x="6" y="6" width="52" height="52" rx="13" fill="#ff5c39"/>' +
-    '<rect x="15" y="15" width="15" height="34" rx="2.5" fill="#fff"/>' +
-    '<path d="M36.5 15h10a2.5 2.5 0 0 1 2.5 2.5v9.3L34 30.4V17.5a2.5 2.5 0 0 1 2.5-2.5z" fill="#fff"/>' +
-    '<path d="M34 34.6l15-3.6v15.5a2.5 2.5 0 0 1-2.5 2.5h-10a2.5 2.5 0 0 1-2.5-2.5z" fill="#fff"/>' +
+    '<rect x="7" y="7" width="50" height="50" rx="6" fill="#ffd400" stroke="#141414" stroke-width="3"/>' +
+    '<rect x="15" y="15" width="15" height="34" rx="2.5" fill="#141414"/>' +
+    '<path d="M36.5 15h10a2.5 2.5 0 0 1 2.5 2.5v9.3L34 30.4V17.5a2.5 2.5 0 0 1 2.5-2.5z" fill="#141414"/>' +
+    '<path d="M34 34.6l15-3.6v15.5a2.5 2.5 0 0 1-2.5 2.5h-10a2.5 2.5 0 0 1-2.5-2.5z" fill="#141414"/>' +
     "</g></svg>";
 
   // ---- Theme --------------------------------------------------------------
@@ -168,7 +168,7 @@
   function syncThemeUi() {
     const theme = effectiveTheme();
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", theme === "light" ? "#f6f5f2" : "#0e0e11");
+    if (meta) meta.setAttribute("content", theme === "light" ? "#f4f0e6" : "#101114");
     document.querySelectorAll(".theme-toggle").forEach((btn) => {
       const label = theme === "light" ? "Switch to dark theme" : "Switch to light theme";
       btn.setAttribute("aria-label", label);

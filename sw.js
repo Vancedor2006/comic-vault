@@ -6,13 +6,13 @@
    Only registered on the live https site (see common.js).
    ========================================================================== */
 
-const CACHE = "comicvault-v1";
+const CACHE = "comicvault-v2";
 const PRECACHE = ["./", "index.html", "css/styles.css", "common.js", "assets/icon-192.png"];
 
 const OFFLINE_HTML = `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"><title>Offline - ComicVault</title>
 <style>body{margin:0;min-height:100vh;display:grid;place-items:center;padding:2rem;text-align:center;
-font-family:system-ui,sans-serif;background:#0e0e11;color:#f2f1ee}p{color:#b4b3bc}</style></head>
+font-family:system-ui,sans-serif;background:#101114;color:#f5f2ea}p{color:#bdb9af}h1{color:#ffd400}</style></head>
 <body><main><h1>You're offline</h1><p>Connect to the internet and try again.</p></main></body></html>`;
 
 self.addEventListener("install", (event) => {

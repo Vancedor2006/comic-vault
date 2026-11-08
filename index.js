@@ -96,7 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return `
       <div class="hero-card${i === 0 ? " is-active" : ""}" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${n}: ${esc(c.title)}"${i === 0 ? "" : ' aria-hidden="true" inert'}>
-        ${c.cover_url ? `<div class="hero-backdrop" data-bg="${esc(c.cover_url)}"></div>` : ""}
         ${c.cover_url ? `<a href="${CV.url.series(c.slug)}" class="hero-cover-link" tabindex="-1" aria-hidden="true"><img src="${esc(c.cover_url)}" alt="" class="hero-cover"></a>` : ""}
         <div class="hero-text">
           <span class="hero-eyebrow">Featured</span>
@@ -129,10 +128,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       </div>`;
 
-    // Blurred backdrops are set from JS so odd characters in URLs can't break the CSS
-    featuredEl.querySelectorAll(".hero-backdrop").forEach((bg) => {
-      bg.style.backgroundImage = `url(${JSON.stringify(bg.dataset.bg)})`;
-    });
     if (n < 2) return;
 
     const slides = Array.from(featuredEl.querySelectorAll(".hero-card"));
