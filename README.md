@@ -1,6 +1,6 @@
 #  Comic-Vault
 
-A webcomic hosting platform built to preserve creator-intended reading pacing (LTR, RTL, and Infinite Scroll). I wrote the html and css but I got help from claude with the javascript.
+A webcomic site for reading and publishing comics. I wrote the html and css but I got help from claude with the javascript.
 
 ## Development Roadmap
 
