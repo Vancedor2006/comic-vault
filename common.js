@@ -94,9 +94,9 @@
     "slice-of-life": "Slice of Life",
   };
   CV.MODES = {
-    infinite: { short: "Vertical Scroll", long: "Vertical scroll (webtoon)", cls: "badge-infinite" },
-    rtl: { short: "Manga (RTL)", long: "Manga (right to left)", cls: "badge-rtl" },
-    ltr: { short: "Western (LTR)", long: "Western (left to right)", cls: "badge-ltr" },
+    infinite: { short: "Vertical", long: "Vertical scroll", cls: "badge-infinite" },
+    rtl: { short: "RTL", long: "Right to left", cls: "badge-rtl" },
+    ltr: { short: "LTR", long: "Left to right", cls: "badge-ltr" },
   };
   CV.mode = (m) => CV.MODES[m] || CV.MODES.ltr;
   CV.genreLabel = (g) => CV.GENRES[g] || g || "";
@@ -429,7 +429,7 @@
       <div class="container footer-inner">
         <div class="footer-brand">
           <a href="index.html" class="logo"><span class="logo-mark">${LOGO}</span><span class="logo-text">Comic-Vault</span></a>
-          <p>Read webcomics the way their creators intended.</p>
+          <p>Read and publish webcomics.</p>
         </div>
         <nav class="footer-links" aria-label="Footer">
           <a href="browse.html">Browse</a>

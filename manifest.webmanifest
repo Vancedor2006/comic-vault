@@ -1,7 +1,7 @@
 {
   "name": "Comic-Vault",
   "short_name": "Comic-Vault",
-  "description": "Read webcomics the way their creators intended.",
+  "description": "Read and publish webcomics.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
